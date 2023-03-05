@@ -4,5 +4,9 @@ module.exports = {
   theme: {
     extend: {},
   },
+  fontFamily: {
+    sans: ["var(--font-inter)"],
+  },
+  darkMode: 'class',
   plugins: [],
 }
