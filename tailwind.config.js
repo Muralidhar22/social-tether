@@ -2,12 +2,12 @@
 module.exports = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
-    extend: {},
-    colors: {
-      black: "rgb(var(--black))",
-      navy: "rgb(var(--navy))",
-      yellow: "rgb(var(--yellow))"
-    }
+    extend: {
+      colors: {
+        blueBg: "var(--color-bluespace-background)",
+        blueCardBg: "var(--color-bluespace-card-background)",
+      }
+    },
   },
   fontFamily: {
     sans: ["var(--font-inter)"],

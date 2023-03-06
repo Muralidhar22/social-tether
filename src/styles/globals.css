@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+*{
+  box-sizing: border-box;
+}
+
 @layer base {
   :root {
     --black: 0, 0, 0;
@@ -29,8 +33,7 @@
     --border-radius-small: 3px;
   }
   
-  @media (prefers-color-scheme: dark) {
-    :root {
+   html.dark,:root {
         --black: 255, 255, 255;
         --white: 34, 34, 34;
         --white-on-dark: 255, 255, 255;
@@ -54,6 +57,5 @@
         --color-modal-close-button: rgb(var(--navy));
         --color-modal-close-button-background: rgb(var(--white-on-dark));
         --border-radius-small: 3px;
-    }
   }
 }
