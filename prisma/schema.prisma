@@ -11,8 +11,25 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id        Int      @id @default(autoincrement())
+  username  String
+  posts     Post[]   // One-to-many relationship with Post
+  comments  Comment[] // One-to-many relationship with Comment
 }
 
+model Post {
+  id          Int       @id @default(autoincrement())
+  content     String
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id]) // Many-to-one relationship with User
+  comments    Comment[] // One-to-many relationship with Comment
+}
+
+model Comment {
+  id        Int    @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User   @relation(fields: [userId], references: [id]) // Many-to-one relationship with User
+  postId    Int
+  post      Post   @relation(fields: [postId], references: [id]) // Many-to-one relationship with Post
+}
