@@ -4,12 +4,29 @@ import Link from "next/link";
 import styles from "@/styles/Form.module.css";
 import { HiAtSymbol, HiFingerPrint, HiOutlineUser } from "react-icons/hi";
 import { useState } from "react";
+import { useFormik } from "formik";
+import { RegisterFormValues } from "@/types/formValues";
+import registerValidate from "@/utils/registerValidate";
 
 const Register = () => {
     const [show, setShow] = useState({
         password: false,
         confirmPassword: false
     })
+    const formik = useFormik({
+        initialValues: {
+            username: "",
+            email: "",
+            password: "",
+            cpassword: ""
+        },
+        validate: registerValidate,
+        onSubmit
+    })
+    
+    async function onSubmit (values: RegisterFormValues) {
+        console.log(values)
+    }
     
     return(
         <>
@@ -25,12 +42,12 @@ const Register = () => {
                 <h1 className="font-bold py-4 text-4xl">Register</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid iure corrupti pariatur explicabo inventore error sit quidem, minus dolor ducimus ab fuga distinctio voluptatibus sequi illum nemo illo ipsa alias.</p>
                </div>
-               <form className="flex flex-col gap-5">
+               <form onSubmit={formik.handleSubmit} className="flex flex-col gap-5">
                     <div className={styles.input_group}>
                         <label htmlFor="username" className="sr-only">Enter your username</label>
                         <input 
                             type="username" 
-                            name="username"
+                            {...formik.getFieldProps("username")}
                             placeholder="Username"
                             className={styles.input_text}
                         />
@@ -40,11 +57,13 @@ const Register = () => {
                             />
                         </span>
                     </div>
+                                        {/* form username validation error message */}
+                                        { (formik.errors.username && formik.touched.username) && <span className="text-sm text-rose-500">{formik.errors.username}</span>}                   
                     <div className={styles.input_group}>
                         <label htmlFor="email" className="sr-only">Enter your email</label>
                         <input 
                             type="email" 
-                            name="email"
+                            {...formik.getFieldProps("email")}
                             placeholder="Email"
                             className={styles.input_text}
                         />
@@ -54,12 +73,14 @@ const Register = () => {
                             />
                         </span>
                     </div>
+                                        {/* form email validation error message */}
+                                        { (formik.errors.email && formik.touched.email) && <span className="text-sm text-rose-500">{formik.errors.email}</span>}
                     <div className={styles.input_group}>
                         <label htmlFor="password" className="sr-only">Enter your password</label>
                         <input 
                             type={show.password ? "text" : "password"}
                             id="password"
-                            name="password"
+                            {...formik.getFieldProps("password")}
                             placeholder="Password"
                             className={styles.input_text}
                         />
@@ -70,11 +91,13 @@ const Register = () => {
                             />
                         </span>
                     </div>
+                     {/* form password validation error message */}
+                     { formik.errors.password && formik.touched.password && <span className="text-sm text-rose-500">{formik.errors.password}</span>}
                     <div className={styles.input_group}>
                         <label htmlFor="cPassword" className="sr-only">Enter your confirm password</label>
                         <input 
                             type={show.confirmPassword ? "text" : "password"}
-                            name="cPassword"
+                            {...formik.getFieldProps("cpassword")}
                             id="cPassword"
                             placeholder="Confirm password"
                             className={styles.input_text}
@@ -86,10 +109,11 @@ const Register = () => {
                             />
                         </span>
                     </div>
-                    
+                     {/* form confirm password validation error message */}
+                     { formik.errors.cpassword && formik.touched.cpassword && <span className="text-sm text-rose-500">{formik.errors.cpassword}</span>}
                     <div className="input-button">
                         <button type="submit" className={styles.button}>
-                            Register
+                            Sign Up
                         </button>
                     </div>
                </form>

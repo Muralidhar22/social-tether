@@ -6,9 +6,24 @@ import Image from "next/image";
 import { HiAtSymbol, HiFingerPrint } from "react-icons/hi";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useFormik } from "formik";
+import { LoginFormValues } from "@/types/formValues";
+import loginValidate from "@/utils/loginValidate";
 
 const Login = () => {
     const [show, setShow] = useState(false)
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: ""
+        },
+        validate: loginValidate,
+        onSubmit
+    })
+    
+    async function onSubmit(values: LoginFormValues) {
+        console.log(values)
+    }
     
     return(
         <>
@@ -24,14 +39,14 @@ const Login = () => {
                 <h1 className="font-bold py-4 text-4xl">Explore</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid iure corrupti pariatur explicabo inventore error sit quidem, minus dolor ducimus ab fuga distinctio voluptatibus sequi illum nemo illo ipsa alias.</p>
                </div>
-               <form className="flex flex-col gap-5">
+               <form onSubmit={formik.handleSubmit} className="flex flex-col gap-5">
                     <div className={styles.input_group}>
                         <label htmlFor="email" className="sr-only">Enter your email</label>
                         <input 
-                            type="email" 
-                            name="email"
+                            type="email"
                             placeholder="Email"
                             className={styles.input_text}
+                            {...formik.getFieldProps("email")}
                         />
                         <span className="flex items-center px-4">
                             <HiAtSymbol 
@@ -39,13 +54,15 @@ const Login = () => {
                             />
                         </span>
                     </div>
+                    {/* form email validation error message */}
+                    { (formik.errors.email && formik.touched.email) && <span className="text-sm text-rose-500">{formik.errors.email}</span>}
                     <div className={styles.input_group}>
                         <label htmlFor="password" className="sr-only">Enter your password</label>
                         <input 
-                            type={ show ? "text" : "password" } 
-                            name="password"
+                            type={ show ? "text" : "password" }
                             placeholder="Password"
                             className={styles.input_text}
+                            {...formik.getFieldProps("password")}
                         />
                           <span className="flex items-center px-4 cursor-pointer hover:text-indigo-500" onClick={() => setShow(!show)}>
                             <HiFingerPrint 
@@ -53,14 +70,15 @@ const Login = () => {
                             />
                         </span>
                     </div>
-                    
+                    {/* form password validation error message */}
+                    { formik.errors.password && formik.touched.password && <span className="text-sm text-rose-500">{formik.errors.password}</span>}
                     <div className="input-button">
                         <button type="submit" className={styles.button}>
                             Login
                         </button>
                     </div>
                     <div className="input-button">
-                        <button type="button" onClick={() => signIn('google')} className={styles.button_custom}>
+                        <button type="button" onClick={() => signIn('google',{ callbackUrl: "http://localhost:3000/" })} className={styles.button_custom}>
                             Sign In with Google 
                             <span>
                                 <Image 
@@ -73,7 +91,7 @@ const Login = () => {
                         </button>
                     </div>
                     <div className="input-button"> 
-                            <button type="button" onClick={() => signIn('github')} className={styles.button_custom}>
+                            <button type="button" onClick={() => signIn('github',{ callbackUrl: "http://localhost:3000/" })} className={styles.button_custom}>
                                 Sign In with Github
                                 <span>
                                 <Image 

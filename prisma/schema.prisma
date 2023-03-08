@@ -23,7 +23,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
+  refresh_token_expires_in String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
@@ -63,10 +63,17 @@ model Comment {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  username String
-  posts    Post[] // One-to-many relationship with Post
-  comments Comment[] // One-to-many relationship with Comment
-  accounts Account[]
-  sessions Session[]
+  id            String    @id @default(cuid())
+  username      String?   @unique
+  email         String?   @unique
+  image         String?
+  name          String?
+  emailVerified DateTime?
+  posts         Post[] // One-to-many relationship with Post
+  comments      Comment[] // One-to-many relationship with Comment
+  accounts      Account[]
+  sessions      Session[]
+  password      String?
+  
+  @@unique([username, email])
 }
