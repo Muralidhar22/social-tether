@@ -23,8 +23,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  refresh_token_expires_in String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -35,14 +34,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
 }
 
 model Post {
@@ -57,23 +48,24 @@ model Comment {
   id      String @id @default(cuid())
   content String
   userId  String
-  user    User   @relation(fields: [userId], references: [id]) // Many-to-one relationship with User
+  user    User   @relation(fields: [userId], references: [id])
   postId  String
-  post    Post   @relation(fields: [postId], references: [id]) // Many-to-one relationship with Post
+  post    Post   @relation(fields: [postId], references: [id])
 }
 
 model User {
   id            String    @id @default(cuid())
   username      String?   @unique
-  email         String?   @unique
+  email         String    @unique
   image         String?
   name          String?
-  emailVerified DateTime?
   posts         Post[] // One-to-many relationship with Post
-  comments      Comment[] // One-to-many relationship with Comment
   accounts      Account[]
   sessions      Session[]
   password      String?
-  
+  followers     User[]    @relation("FollowRelation")
+  following     User[]    @relation("FollowRelation")
+  Comment       Comment[]
+
   @@unique([username, email])
 }

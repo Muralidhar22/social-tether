@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import bcrypt from "bcryptjs"
+import { hash } from "bcryptjs"
 
 type ResponseData = {
     message: string

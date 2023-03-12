@@ -1,3 +1,5 @@
+import type { ReactElement, ReactNode } from 'react'
+import type { NextPage } from 'next'
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Inter } from '@next/font/google'
@@ -8,29 +10,46 @@ import Layout from '@/layout/Layout'
 
 const inter = Inter({ subsets: ['latin'], weight: ["400","500","600","700"],variable: "--font-inter"  })
 
-export default function App({ Component, pageProps }: AppProps) {
+
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  
+  const getLayout = Component.getLayout ?? ((page) => page)
+  
   return (
     <>
-      {/* <Script 
+      <Script 
          dangerouslySetInnerHTML={{
-          __html: `// Check for preferred theme in local storage
-          let preferredTheme = localStorage.getItem('prefers-dark');
+          __html: `// Check for preferred theme in local storage  
+          console.log("asdasd");
+          if(typeof prefersDark == "undefined") {
+            const prefersDark = JSON.parse(localStorage.getItem("prefers-dark"))
 
-          // Set the theme based on the value in local storage
-          if (preferredTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-          }`
+            // Set the theme based on the value in local storage
+            if (prefersDark === true) {
+              document.documentElement.classList.add('dark')
+            } else {
+              document.documentElement.classList.remove('dark')
+            }
+          }
+          `
          }}
-         strategy="beforeInteractive"
-      /> */}
+      />
     
-     <div className={`${inter.variable} font-sans`}>
+     <div className={`${inter.variable} font-sans p-2`}>
         <SessionProvider session={pageProps.session}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          {
+            getLayout(
+              <Component {...pageProps} />
+            )
+          }
         </SessionProvider>
       </div>
     </>

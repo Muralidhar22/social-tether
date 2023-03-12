@@ -12,5 +12,6 @@ module.exports = {
   fontFamily: {
     sans: ["var(--font-inter)"],
   },
+  darkMode: 'class',
   plugins: [],
 }
