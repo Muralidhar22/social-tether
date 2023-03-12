@@ -26,6 +26,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <Script 
+         id="first-script"
          dangerouslySetInnerHTML={{
           __html: `// Check for preferred theme in local storage  
           console.log("asdasd");
