@@ -2,6 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { PostsFilterType } from '.';
 
+export type ResponseData = {
+  data?: any;
+  message: string;
+  error?: any;
+}
+
 export interface PostsApiRequest extends NextApiRequest {
     body: {
       content: string

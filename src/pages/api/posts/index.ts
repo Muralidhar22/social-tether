@@ -1,22 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { PostsApiRequest } from '@/types/api';
-
-type Data = {
-  message: string
-  data?: any
-}
+import { PostsApiRequest, ResponseData } from '@/types/api';
 
 export default async function postHandler(
   req: PostsApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<ResponseData>
 ) {
   const { query, method } = req
 //   const id = query.id
 //   const name = query.name as string
   const postsFilter = query.q
   // const userId = query.id as string
-  const { content, authorId, authorEmail } = req.body
+  const { content, authorId, authorEmail, image } = req.body
 
   switch (method) {
     case 'GET':
@@ -36,8 +31,8 @@ export default async function postHandler(
          const data = await prisma?.post.create({
           data: {
            content,
-           authorId,
-           author: { connect: { email: authorEmail } }
+           authorId: authorId,
+           image: image ?? ""
           } 
          })
          res.status(201).json({ message: "Posts returned successfully!", data})
