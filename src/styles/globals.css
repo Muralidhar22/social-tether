@@ -5,3 +5,43 @@
 *{
   box-sizing: border-box;
 }
+
+body {
+  @apply dark:bg-black;
+}
+
+h1,
+h2,
+h3,
+h4,
+div,
+p,
+span {
+  @apply dark:text-white;
+}
+
+input,
+textarea {
+  @apply dark:text-black;
+}
+
+input[type="file"] {
+  @apply dark:text-white;
+}
+
+.logo {
+  background: linear-gradient(to right, crimson,pink,springgreen);
+  background-size: 200% 200%;
+  animation: rainbow 2s ease-in-out infinite;
+  background-clip: text;
+}
+
+.logo:hover {
+  color:rgba(0,0,0,0);
+}
+
+@keyframes rainbow { 
+  0%{background-position:left}
+  50%{background-position:right}
+  100%{background-position:left}
+}

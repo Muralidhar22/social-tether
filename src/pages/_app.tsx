@@ -6,7 +6,7 @@ import { Inter } from '@next/font/google'
 import { SessionProvider } from "next-auth/react"
 import Head from 'next/head'
 import Script from 'next/script'
-import Layout from '@/layout/Layout'
+import Layout from '@/layout'
 
 const inter = Inter({ subsets: ['latin'], weight: ["400","500","600","700"],variable: "--font-inter"  })
 
@@ -29,7 +29,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
          id="first-script"
          dangerouslySetInnerHTML={{
           __html: `// Check for preferred theme in local storage  
-          console.log("asdasd");
           if(typeof prefersDark == "undefined") {
             const prefersDark = JSON.parse(localStorage.getItem("prefers-dark"))
 
@@ -44,7 +43,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
          }}
       />
     
-     <div className={`${inter.variable} font-sans p-2`}>
+     <div className={`${inter.variable} font-sans min-h-screen`}>
         <SessionProvider session={pageProps.session}>
           {
             getLayout(

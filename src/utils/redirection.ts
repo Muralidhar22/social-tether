@@ -2,10 +2,11 @@ import { GetServerSidePropsContext } from "next";
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
+import { getUser } from "@/lib/api/userApi";
+
 export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     const session = await getServerSession(ctx.req, ctx.res, authOptions)
-    const res = await fetch(`${process.env.BASE_URL}/api/user/new/${session?.user?.email}`)
-    const result = await res.json()
+    const userDetails = session?.user?.email && await getUser("new",session.user.email)
 
   if(!session) {
     return {
@@ -15,22 +16,31 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
       }
     }
   }
-  else if(!result.username && ctx.resolvedUrl !== "/new/user") {
+  else if(userDetails) {
+    if(!userDetails.username && ctx.resolvedUrl !== "/new/user") {
+      return {
+        redirect: {
+          destination: "/new/user",
+          permanent: false
+        }
+      }
+    } else if(userDetails.username && ctx.resolvedUrl === "/new/user") {
+      return {
+        redirect: {
+          destination: `/${userDetails.username}`,
+          permanent: false
+        }
+      }
+    } 
+  } else {
     return {
       redirect: {
-        destination: "/new/user",
+        destination: "500",
         permanent: false
       }
     }
-  } else if(result.username && ctx.resolvedUrl === "/new/user") {
-    return {
-      redirect: {
-        destination: `/profile/${result.username}`,
-        permanent: false
-      }
-    }
-  } 
+  }
   return {
-    props: { session, result }
+    props: { session, userDetails }
   }
 }

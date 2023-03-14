@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 
 import { authenticatedRoute } from '@/utils/redirection';
-import getLayout from '@/layout/Layout';
+import getLayout from '@/layout';
 
 export const getServerSideProps: GetServerSideProps = authenticatedRoute
 

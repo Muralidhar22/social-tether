@@ -1,25 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { hash } from "bcryptjs"
+import { UserApiRequest } from '@/types/api'
+import { hash } from 'bcryptjs'
 
-type ResponseData = {
-    message: string
-    error: { description: string }
+type Data = {
+  message: string
+  data?: any
 }
 
-export default async function handler (
-    req: NextApiRequest,
-    res: NextApiResponse<Partial<ResponseData>>
+export default async function commentsHandler(
+  req: UserApiRequest,
+  res: NextApiResponse<Data>
 ) {
-    if(req.method === "POST") {
-        if(!req.body) res.status(400).json({ message: "Bad request", error: { description: "Fields cannot be blank" } })
-        const { username, email, password } = req.body
-        // check duplicate username and email
-        // const checkExisting = await prisma?.user.findUnique({ where: 
-        //     { email, username }})     
-        // if(!checkexisting) return res.status(422).json({ message: "User already Exists" })
-        // Users.create({ username })
-        res.json({ message: "Registered successfully!" })
-    } else {
-        res.status(405).json({ message: "Bad request", error: { description: "HTTP POST request is only allowed" } })
-    }
+  const { query, method } = req
+  const { email, password, username } = req.body
+
+  switch (method) {
+    case 'POST':
+        if(!(email && password && username)) {
+            return res.status(400).json({ message: "Fields are missing" })
+        }
+        
+        const isExisting = await prisma?.user.findUnique({
+            where: { username_email: { username, email } }
+        }) 
+        
+      break;
+    default:
+      res.setHeader('Allow', ['POST'])
+      res.status(405).end(`Method ${method} Not Allowed`)
+  }
 }

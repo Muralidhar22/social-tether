@@ -1,3 +1,5 @@
+export type PostsFilterType = "all" | "following"
+
 export type PostType = {
     id: string;
     content: string;
@@ -18,7 +20,7 @@ export type LikesType = {
 
 export type UserType = {
     id: string;
-    username?: string;
+    username: string;
     email: string;
     image?: string;
     name?: string;

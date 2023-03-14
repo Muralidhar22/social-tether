@@ -41,7 +41,8 @@ model Post {
   content  String
   authorId String
   author   User      @relation(fields: [authorId], references: [id]) // Many-to-one relationship with User
-  comments Comment[] // One-to-many relationship with Comment
+  comments Comment[]
+  image    String?
 }
 
 model Comment {
@@ -54,18 +55,18 @@ model Comment {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  username      String?   @unique
-  email         String    @unique
-  image         String?
-  name          String?
-  posts         Post[] // One-to-many relationship with Post
-  accounts      Account[]
-  sessions      Session[]
-  password      String?
-  followers     User[]    @relation("FollowRelation")
-  following     User[]    @relation("FollowRelation")
-  Comment       Comment[]
+  id        String    @id @default(cuid())
+  username  String?   @unique
+  email     String    @unique
+  image     String?
+  name      String?
+  posts     Post[] // One-to-many relationship with Post
+  accounts  Account[]
+  sessions  Session[]
+  password  String?
+  followers User[]    @relation("FollowRelation")
+  following User[]    @relation("FollowRelation")
+  Comment   Comment[]
 
   @@unique([username, email])
 }

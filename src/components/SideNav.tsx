@@ -9,9 +9,9 @@ type SideNavPropsType = {
 const SideNav = ({ username }: SideNavPropsType) => {
     return(
         <>
-        <aside>
-           <Link href={`/profile/${username}`}>Profile</Link>
-           <Link href={`/profile/${username}/bookmarks`}>Bookmarks</Link>
+        <aside className="flex flex-col gap-5">
+           <Link href={`/${username}`}>Profile</Link>
+           <Link href={`/bookmarks`}>Bookmarks</Link>
            <Link href={`/?feed=explore`}>Explore</Link>
         </aside>
         </>

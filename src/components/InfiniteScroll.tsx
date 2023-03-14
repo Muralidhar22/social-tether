@@ -28,8 +28,8 @@ const InfiniteScrollComponent = ({ endpoint, ComponentToRender }: Props) => {
 
     return (
         <div>
-            {[1, 2 , 3, 4, 5, 6].map((v) => (
-                <ComponentToRender key={v} className="w-96 h-96 bg-rose-500 mb-4" />
+            {[1, 2 , 3, 4, 5, 6].map((val) => (
+                <ComponentToRender key={val} className="w-96 h-96 bg-rose-500 mb-4" />
             ))}
 
             {loading && <div>loading...</div>}

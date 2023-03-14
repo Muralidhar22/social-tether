@@ -19,19 +19,27 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
     }),
     CredentialsProvider({
-      name: "Credentials",
-      
+      name: "credentials",
+      credentials: {},
       async authorize(credentials, req) {
+        console.log({credentials})
         const result = await prisma?.user.findUnique({
-          where: { email: credentials?.email }
+          where: { email: req.body?.email }
         })
         if(!result) {
           throw new Error("No user found")
         }
         // check password
+        return result
       },
     }),
   ],
+  pages: {
+    signIn:  "/auth/signin"
+  },
+  session: {
+    strategy: "jwt"
+  }
 }
 
 export default NextAuth(authOptions)

@@ -15,6 +15,13 @@ export default async function userHandler(
       // Get data from your database
       const user = await prisma?.user.findUnique({
         where: { email },
+        select: {
+          email: true,
+          id: true,
+          image: true,
+          name: true,
+          username: true
+        }
       })
       if(!user) {
         return res.status(404).json({ message: "User not found" })

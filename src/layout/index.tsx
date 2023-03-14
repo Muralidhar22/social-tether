@@ -12,7 +12,7 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
     return (
-        <>
+        <div className="p-5">
         <nav className="flex justify-between items-center">
         <Logo />
             <div className="flex gap-5 item-center">
@@ -21,7 +21,7 @@ const Layout = ({ children }: Props) => {
             </div>
         </nav>
             {children}
-        </>
+        </div>
     )
 }
 
