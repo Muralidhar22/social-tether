@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import tetherAxios from "./axiosInstance"
+
 export const likesUrlEndpoint = "/api/likes"
 
 export const getLikes = async (postId: string) => {

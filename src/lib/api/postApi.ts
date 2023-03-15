@@ -1,11 +1,12 @@
 import axios from "axios"
 
 import { PostsFilterType } from "@/types"
+import tetherAxios from "./axiosInstance"
 
 export const postsUrlEndpoint = "/api/posts"
 
 export const getPosts = async (filter: PostsFilterType) => {
- const { data, status } = await axios.get(postsUrlEndpoint, {
+ const { data, status } = await tetherAxios.get(postsUrlEndpoint, {
     params: { q: filter }
  })
  return data;

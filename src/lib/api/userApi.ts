@@ -1,16 +1,17 @@
-import axios from "axios"
+import tetherAxios from "./axiosInstance"
 
 import { UserType } from "@/types"
 
 export const usersEndpoint = "/api/user"
 export const newUsersEndpoint = "/api/user/new"
 
-export const getUser = async (type?: "new", email?: string) => {
+export const getUser = async (type?: "new", email?: string): Promise<UserType> => {
+
     if(type === "new") {
-        const { data: response, status } = await axios.get(`${newUsersEndpoint}/${email}`)
+        const { data: response, status } = await tetherAxios.get(`${newUsersEndpoint}/${email}`)
         return response;
     }
-    const { data: response } = await axios.get(usersEndpoint)
+    const { data: response } = await tetherAxios.get(usersEndpoint)
     return response;
 }
 

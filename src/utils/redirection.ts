@@ -2,11 +2,14 @@ import { GetServerSidePropsContext } from "next";
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
+
 import { getUser } from "@/lib/api/userApi";
 
 export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     const session = await getServerSession(ctx.req, ctx.res, authOptions)
-    const userDetails = session?.user?.email && await getUser("new",session.user.email)
+    const userDetails = session?.user?.email 
+                        &&
+                        await getUser("new",session.user.email)
 
   if(!session) {
     return {

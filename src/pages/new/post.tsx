@@ -18,14 +18,14 @@ const Post = ({ userDetails }: InferGetServerSidePropsType<typeof getServerSideP
     const onSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault()
         // router
-        const formData = new FormData()
-        console.log(typeof image, image)
-        formData.append("file", image)
-        formData.append("upload_preset","hjgl49mu")
-        console.log(formData, typeof formData)
-        
-        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_API}`,formData)
-        console.log(data)
+        if(image) {
+            const formData = new FormData()
+            formData.append("file", image)
+            formData.append("upload_preset","hjgl49mu")
+            
+            const { data } = await axios.post(`${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_API}`,formData)
+            console.log(data)
+        }
     }
     
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
