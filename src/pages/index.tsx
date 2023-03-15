@@ -20,7 +20,7 @@ const Home = ({ userDetails }: InferGetServerSidePropsType<typeof getServerSideP
   // useEffect(() => {
     
   // },[])
-  
+
   return (
     <>
       <Head>
