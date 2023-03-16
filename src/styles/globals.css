@@ -45,3 +45,7 @@ input[type="file"] {
   50%{background-position:right}
   100%{background-position:left}
 }
+
+.toast-text {
+  @apply !text-black;
+}

@@ -4,6 +4,7 @@ export type PostType = {
     id: string;
     content: string;
     authorId: string;
+    image: string;
 }
 
 export type CommentType = {
@@ -24,4 +25,7 @@ export type UserType = {
     email: string;
     image?: string;
     name?: string;
+    bio?: string;
+    followers: number;
+    following: number;
 }

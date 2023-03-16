@@ -23,7 +23,9 @@ export interface PostsApiRequest extends NextApiRequest {
 
 export interface UserApiRequest extends NextApiRequest {
     query: {
-      id: string
+      id: string;
+      email: string;
+      username: string;
     };
     body: {
       username: string;

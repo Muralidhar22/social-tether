@@ -4,9 +4,8 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Inter } from '@next/font/google'
 import { SessionProvider } from "next-auth/react"
-import Head from 'next/head'
 import Script from 'next/script'
-import Layout from '@/layout'
+import { Toaster } from "react-hot-toast"
 
 const inter = Inter({ subsets: ['latin'], weight: ["400","500","600","700"],variable: "--font-inter"  })
 
@@ -20,9 +19,8 @@ type AppPropsWithLayout = AppProps & {
 }
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  
   const getLayout = Component.getLayout ?? ((page) => page)
-  
+
   return (
     <>
       <Script 
@@ -44,6 +42,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       />
     
      <div className={`${inter.variable} font-sans min-h-screen`}>
+      <Toaster />
         <SessionProvider session={pageProps.session}>
           {
             getLayout(

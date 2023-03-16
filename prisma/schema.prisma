@@ -38,9 +38,9 @@ model Session {
 
 model Post {
   id       String    @id @default(cuid())
-  content  String
+  content  String?
   authorId String
-  author   User      @relation(fields: [authorId], references: [id]) // Many-to-one relationship with User
+  author   User      @relation(fields: [authorId], references: [id])
   comments Comment[]
   image    String?
 }
@@ -54,19 +54,28 @@ model Comment {
   post    Post   @relation(fields: [postId], references: [id])
 }
 
+model UserFollow {
+  id String @id @default(cuid())
+  followerId String
+  followedId String
+  follower User @relation("Following",fields: [followerId], references: [id])
+  followed User @relation("Followed",fields: [followedId], references: [id])
+}
+
 model User {
   id        String    @id @default(cuid())
   username  String?   @unique
   email     String    @unique
   image     String?
   name      String?
-  posts     Post[] // One-to-many relationship with Post
+  posts     Post[]
   accounts  Account[]
   sessions  Session[]
   password  String?
-  followers User[]    @relation("FollowRelation")
-  following User[]    @relation("FollowRelation")
+  followers UserFollow[]    @relation("Followed")
+  following UserFollow[]    @relation("Following")
   Comment   Comment[]
+  bio       String?
 
   @@unique([username, email])
 }

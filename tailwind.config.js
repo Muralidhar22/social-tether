@@ -13,5 +13,6 @@ module.exports = {
     sans: ["var(--font-inter)"],
   },
   darkMode: 'class',
+  important: true,
   plugins: [],
 }

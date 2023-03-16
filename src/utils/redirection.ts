@@ -7,9 +7,9 @@ import { getUser } from "@/lib/api/userApi";
 
 export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     const session = await getServerSession(ctx.req, ctx.res, authOptions)
-    const userDetails = session?.user?.email 
+    const response = session?.user?.email 
                         &&
-                        await getUser("new",session.user.email)
+                        await getUser(session.user.email)
 
   if(!session) {
     return {
@@ -19,18 +19,18 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
       }
     }
   }
-  else if(userDetails) {
-    if(!userDetails.username && ctx.resolvedUrl !== "/new/user") {
+  else if(response) {
+    if(!response?.data?.username && ctx.resolvedUrl !== "/new/user") {
       return {
         redirect: {
           destination: "/new/user",
           permanent: false
         }
       }
-    } else if(userDetails.username && ctx.resolvedUrl === "/new/user") {
+    } else if(response?.data?.username && ctx.resolvedUrl === "/new/user") {
       return {
         redirect: {
-          destination: `/${userDetails.username}`,
+          destination: `/${response.data.username}`,
           permanent: false
         }
       }
@@ -44,6 +44,6 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     }
   }
   return {
-    props: { session, userDetails }
+    props: { sessionUser: response.data }
   }
 }

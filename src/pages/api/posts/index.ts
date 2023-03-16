@@ -11,12 +11,12 @@ export default async function postHandler(
 //   const name = query.name as string
   const postsFilter = query.q
   // const userId = query.id as string
-  const { content, authorId, authorEmail, image } = req.body
+  const { content, authorId, image } = req.body
 
   switch (method) {
     case 'GET':
       if(postsFilter === "all") {
-          const data = await prisma?.post.findMany({})
+          const data = await prisma?.post.findMany()
           res.status(200).json({ message: "Posts returned successfully!", data})
       } else if (postsFilter === "following") {
         const data = await prisma?.post.findMany({
@@ -30,9 +30,9 @@ export default async function postHandler(
        try{
          const data = await prisma?.post.create({
           data: {
-           content,
-           authorId: authorId,
-           image: image ?? ""
+           content: content ?? "",
+           authorId,
+           image: image,
           } 
          })
          res.status(201).json({ message: "Posts returned successfully!", data})

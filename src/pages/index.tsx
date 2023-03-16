@@ -1,25 +1,35 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useSession, signOut } from "next-auth/react";
+import Image from 'next/image';
+import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { GetServerSideProps } from 'next';
-import { InferGetServerSidePropsType } from 'next'
+import { InferGetServerSidePropsType } from 'next';
+import useSWR from "swr";
+import { useRouter } from 'next/router';
 
 import { authenticatedRoute } from '@/utils/redirection';
 import { PostsFilterType, UserType } from '@/types';
 import getLayout from '@/layout';
 import Posts from '@/components/posts/Posts';
 import SideNav from '@/components/SideNav';
+import UserImage from '@/components/UserImage';
+import { getRandomUsers, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
 
-export const getServerSideProps: GetServerSideProps<{userDetails: UserType}>  = authenticatedRoute
+export const getServerSideProps: GetServerSideProps<{sessionUser: UserType}>  = authenticatedRoute
 
-const Home = ({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { data: session } = useSession()
-  const [postsFilter, setPostsFilter] = useState<PostsFilterType>("all")
-  
-  // useEffect(() => {
-    
-  // },[])
+  const [postsFilter, setPostsFilter] = useState<PostsFilterType>("following")
+  const { isLoading, data: randomUsers, error } = useSWR(cacheKey,() => getRandomUsers(sessionUser.username))
+  const router = useRouter()
+
+  useEffect(() => {
+    const { query } = router
+    if(query.feed === "explore") {
+      setPostsFilter("all")
+    } 
+  },[router])
 
   return (
     <>
@@ -31,16 +41,29 @@ const Home = ({ userDetails }: InferGetServerSidePropsType<typeof getServerSideP
       </Head>
       <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-5">
-          <h2>{session?.user?.name}</h2>
-          <h2>{session?.user?.email}</h2>
-          <h2>{userDetails.username}</h2>
-          <div className="flex justify-center">
-            <button className="mt-5 px-10 py-1" onClick={() => signOut()}>Sign out</button>
+
+          <div className="border-2 rounded-md border-zinc-500 p-2">
+            <h2>Users to follow</h2>      
+          {
+            isLoading 
+            ?
+            <span>loading...</span>
+            :
+            randomUsers?.data && randomUsers?.data.map((user) => (
+              <span className="bg-red-500 text-white font-bold m-2 flex gap-3">
+                <UserImage 
+                    imageSrc={user.image}
+                />
+                   <Link href={`/${user.username}`}>{user.name}</Link>
+              </span>
+            ) )
+          }
           </div>
-              <SideNav username={userDetails.username} />
+          <h2>{sessionUser.username}</h2>
+              <SideNav username={sessionUser.username} />
               <div className="flex justify-center">
                <Posts filter={postsFilter} />
-              <Link href={`/${userDetails.username}`} className="mt-5 px-10 py-1">Profile</Link>
+              <Link href={`/${sessionUser.username}`} className="mt-5 px-10 py-1">Profile</Link>
           </div>
         </div>
       </div>

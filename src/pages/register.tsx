@@ -37,10 +37,10 @@ const Register = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta property="og:title" content="Register - Tether" key="title" />
             </Head>
-            <section className="w-3/4 mx-auto flex flex-col gap-10">
+            <section className="w-3/4 mx-auto flex flex-col gap-10 dark:text-black">
                <div className="title">
-                <h1 className="font-bold py-4 text-4xl">Register</h1>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid iure corrupti pariatur explicabo inventore error sit quidem, minus dolor ducimus ab fuga distinctio voluptatibus sequi illum nemo illo ipsa alias.</p>
+                <h1 className="font-bold py-4 text-4xl text-inherit">Register</h1>
+                <p className="text-inherit">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid iure corrupti pariatur explicabo inventore error sit quidem, minus dolor ducimus ab fuga distinctio voluptatibus sequi illum nemo illo ipsa alias.</p>
                </div>
                <form onSubmit={formik.handleSubmit} className="flex flex-col gap-5">
                     <div className={styles.input_group}>

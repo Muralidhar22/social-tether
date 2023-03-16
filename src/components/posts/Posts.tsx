@@ -4,7 +4,11 @@ import { getPosts, postsUrlEndpoint as cacheKey } from "@/lib/api/postApi";
 import InfiniteScrollComponent from "../InfiniteScroll";
 import { PostsFilterType } from "@/types";
 
-const El = ({ className }: { className: string }) => (<div className={className}>OMG!</div>)
+const PostContainer = ({ className }: { className: string }) => (
+<div className={className}>
+        OMG!
+        
+</div>)
 
 type PostsPropsType = {
     filter: PostsFilterType
@@ -20,11 +24,9 @@ const Posts = ({ filter }: PostsPropsType) => {
      } = useSWR(cacheKey,() => getPosts(filter), {
         // onSuccess: data => data.sort((a, b) => b.id - a.id)
      })
-    
-     console.log(posts && posts)
      
     return (
-        <InfiniteScrollComponent endpoint={url} ComponentToRender={El} />
+        <InfiniteScrollComponent endpoint={url} ComponentToRender={PostContainer} />
     )
 }
 

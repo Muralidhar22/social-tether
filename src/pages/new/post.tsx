@@ -5,26 +5,45 @@ import { useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 
+import { createPost } from "@/lib/api/postApi";
+import useSWR from "swr"
 import getLayout from "@/layout";
 import { authenticatedRoute } from '@/utils/redirection';
 import { UserType } from '@/types';
+import { toast, Toaster } from "react-hot-toast";
+import { toastError } from "@/lib/toastMessage";
 
-export const getServerSideProps: GetServerSideProps<{userDetails: UserType}>  = authenticatedRoute
+export const getServerSideProps: GetServerSideProps<{sessionUser: UserType}>  = authenticatedRoute
 
-const Post = ({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Post = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [postText, setPostText] = useState<string>()
     const [image, setImage] = useState<File>()
     const [selectedImage, setSelectedImage] = useState<string>()
     const onSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault()
         // router
+        console.log("ASdsa ")
+        let imageCloudinaryUrl;
         if(image) {
             const formData = new FormData()
             formData.append("file", image)
             formData.append("upload_preset","hjgl49mu")
-            
-            const { data } = await axios.post(`${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_API}`,formData)
-            console.log(data)
+            try {
+                const { data, status } = await axios.post(`${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_API}`,formData)
+                imageCloudinaryUrl = data.secure_url
+                
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        if(!image && !postText) {
+            toastError("Post content can't be empty")
+        } else {
+            createPost({ 
+                authorId: sessionUser.id,
+                content: postText,
+                image: imageCloudinaryUrl 
+            })
         }
     }
     
@@ -42,6 +61,7 @@ const Post = ({ userDetails }: InferGetServerSidePropsType<typeof getServerSideP
     
     return (
         <>
+        <Toaster />
             <div>
                 
             <form onSubmit={onSubmitHandler} className="flex flex-col gap-3">
@@ -57,7 +77,7 @@ const Post = ({ userDetails }: InferGetServerSidePropsType<typeof getServerSideP
                         height={120}
                     />
                 </div>
-                <textarea value={postText} onChange={(e) => setPostText(e.target.value)} name="" id="" cols={30} rows={10}>asdasd</textarea>
+                <textarea value={postText} onChange={(e) => setPostText(e.target.value)} name="" id="" cols={30} rows={10}></textarea>
                 <button type="submit" className="">submit</button>
             </form>
             </div>

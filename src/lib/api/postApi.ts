@@ -1,6 +1,4 @@
-import axios from "axios"
-
-import { PostsFilterType } from "@/types"
+import { PostsFilterType, PostType } from "@/types"
 import tetherAxios from "./axiosInstance"
 
 export const postsUrlEndpoint = "/api/posts"
@@ -12,8 +10,14 @@ export const getPosts = async (filter: PostsFilterType) => {
  return data;
 }
 
-export const addPost = async () => {
-   
+export const createPost = async (postData: Partial<PostType>) => {
+   console.log({postData})
+   const { data } = await tetherAxios.post(postsUrlEndpoint, {
+         content: postData.content,
+         authorId: postData.authorId,
+         image: postData.image
+   })
+   console.log(data)
 }
 
 export const updatePost = async () => {

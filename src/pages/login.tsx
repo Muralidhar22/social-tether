@@ -34,7 +34,7 @@ const Login = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta property="og:title" content="Login - Tether" key="title" />
             </Head>
-            <section className="w-3/4 mx-auto flex flex-col gap-10">
+            <section className="w-3/4 mx-auto flex flex-col gap-10 dark:!text-black">
                <div className="title">
                 <h1 className="font-bold py-4 text-4xl">Explore</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid iure corrupti pariatur explicabo inventore error sit quidem, minus dolor ducimus ab fuga distinctio voluptatibus sequi illum nemo illo ipsa alias.</p>

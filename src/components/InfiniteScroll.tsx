@@ -1,15 +1,23 @@
 import { useEffect, useState, useRef } from "react";
+import useSWRInfinite from 'swr/infinite';
+import useSWR from "swr";
+import { useRouter } from "next/router";
+
+import { getPosts,postsUrlEndpoint } from "@/lib/api/postApi";
 
 type Props = {
     endpoint: URL
     ComponentToRender: React.FC<any>
+    cacheKey: any
+    fetcher: () => void
 }
 
 const InfiniteScrollComponent = ({ endpoint, ComponentToRender }: Props) => {
     const [fetching, setFetching] = useState<boolean>(false)
     const loaderRef = useRef(null)
     const [loading, setLoading] = useState<boolean>(false)
-
+    // const {  data, error, isLoading,setSize, size, mutate } = useSWRInfinite()
+    const {  } = useSWR
     
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {

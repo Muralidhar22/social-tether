@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 
-export default function userHandler(
+export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
