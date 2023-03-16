@@ -9,16 +9,13 @@ type ResponseType<T> = {
 
 export const usersEndpoint = "/api/user"
 export const randomUsersEndpoint = "/api/user/random"
-export const usernameEndpoint = "api/user/username"
+export const usernameEndpoint = "/api/user/username"
+export const userEmailEndpoint = "/api/user/email"
 
 export const getUser = async (email: string): Promise<ResponseType<UserType>> => {
 
-        const { data: response, status } = await tetherAxios.get(usersEndpoint, { 
-            params: {
-                email
-            }
-        })
-        return response;
+        const { data, status } = await tetherAxios.get(`${userEmailEndpoint}/${email}`)
+        return data;
 }
 
 export const updateUsername = async (newUsername: string) => {

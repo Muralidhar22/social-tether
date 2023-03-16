@@ -62,7 +62,7 @@ const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
           <h2>{sessionUser.username}</h2>
               <SideNav username={sessionUser.username} />
               <div className="flex justify-center">
-               <Posts filter={postsFilter} />
+               <Posts filter={postsFilter} sessionUserId={sessionUser.id} />
               <Link href={`/${sessionUser.username}`} className="mt-5 px-10 py-1">Profile</Link>
           </div>
         </div>

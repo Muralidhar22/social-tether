@@ -12,19 +12,21 @@ const PostContainer = ({ className }: { className: string }) => (
 
 type PostsPropsType = {
     filter: PostsFilterType
+    sessionUserId: string
 }
 
-const Posts = ({ filter }: PostsPropsType) => {
+const Posts = ({ filter,sessionUserId }: PostsPropsType) => {
+    
     const url = new URL("http://localhost:3000")
     const { 
         isLoading,
         error,
         data: posts,
         mutate
-     } = useSWR(cacheKey,() => getPosts(filter), {
+     } = useSWR(cacheKey,() => getPosts(filter, sessionUserId), {
         // onSuccess: data => data.sort((a, b) => b.id - a.id)
      })
-     
+     console.log({ posts })
     return (
         <InfiniteScrollComponent endpoint={url} ComponentToRender={PostContainer} />
     )

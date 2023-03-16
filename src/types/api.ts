@@ -17,7 +17,7 @@ export interface PostsApiRequest extends NextApiRequest {
     };
     query: {
       q: PostsFilterType
-      id: string
+      sid: string
     }
 }
 
@@ -34,10 +34,26 @@ export interface UserApiRequest extends NextApiRequest {
     }
 }
 
+export interface FollowApiRequest extends NextApiRequest {
+  query: {
+    q: "add" | "remove";
+    followerId: string;
+    followingId: string;
+  };
+  body: {
+    followerId: string;
+    followingId: string;
+  }
+}
 export interface CommentsApiRequest extends NextApiRequest {
   
 }
 
 export interface LikesApiRequest extends NextApiRequest {
   
+}
+
+export type FollowApiResponse = {
+  message: string
+  data?: { isFollowed: boolean, isFollowing: boolean }
 }

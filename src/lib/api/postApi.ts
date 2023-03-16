@@ -3,9 +3,9 @@ import tetherAxios from "./axiosInstance"
 
 export const postsUrlEndpoint = "/api/posts"
 
-export const getPosts = async (filter: PostsFilterType) => {
+export const getPosts = async (filter: PostsFilterType, sessionUserId: string) => {
  const { data, status } = await tetherAxios.get(postsUrlEndpoint, {
-    params: { q: filter }
+    params: { q: filter, sid: sessionUserId }
  })
  return data;
 }

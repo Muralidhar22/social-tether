@@ -7,22 +7,28 @@ export default async function postHandler(
   res: NextApiResponse<ResponseData>
 ) {
   const { query, method } = req
-//   const id = query.id
-//   const name = query.name as string
-  const postsFilter = query.q
+  const { sid } = query
   // const userId = query.id as string
   const { content, authorId, image } = req.body
 
   switch (method) {
     case 'GET':
-      if(postsFilter === "all") {
-          const data = await prisma?.post.findMany()
-          res.status(200).json({ message: "Posts returned successfully!", data})
-      } else if (postsFilter === "following") {
+      if(query.q === "all") {
+          const data = await prisma?.post.findMany({
+            take: 10
+          })
+         return res.status(200).json({ message: "Posts returned successfully!", data})
+      } else if (query.q === "following") {
+        const followingData = await prisma?.userFollow.findMany({
+          where: { 
+            followingId: sid
+          }
+        })
+        console.log({followingData})
         const data = await prisma?.post.findMany({
           where: { authorId }
         })
-        res.status(200).json({message: "Posts returned successfully!", data})
+       return res.status(200).json({message: "Posts returned successfully!", data})
       }
       break;
     case 'POST':

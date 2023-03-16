@@ -26,6 +26,7 @@ export type UserType = {
     image?: string;
     name?: string;
     bio?: string;
-    followers: number;
-    following: number;
+    followers: UserType[];
+    following: UserType[];
+    posts: PostType[];
 }

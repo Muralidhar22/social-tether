@@ -55,25 +55,25 @@ model Comment {
 }
 
 model UserFollow {
-  id String @id @default(cuid())
-  followerId String
-  followedId String
-  follower User @relation("Following",fields: [followerId], references: [id])
-  followed User @relation("Followed",fields: [followedId], references: [id])
+  id          String @id @default(cuid())
+  followerId  String
+  followingId String
+  follower    User   @relation("Following", fields: [followerId], references: [id])
+  following   User   @relation("Followed", fields: [followingId], references: [id])
 }
 
 model User {
-  id        String    @id @default(cuid())
-  username  String?   @unique
-  email     String    @unique
+  id        String       @id @default(cuid())
+  username  String?      @unique
+  email     String       @unique
   image     String?
   name      String?
   posts     Post[]
   accounts  Account[]
   sessions  Session[]
   password  String?
-  followers UserFollow[]    @relation("Followed")
-  following UserFollow[]    @relation("Following")
+  followers UserFollow[] @relation("Followed")
+  following UserFollow[] @relation("Following")
   Comment   Comment[]
   bio       String?
 

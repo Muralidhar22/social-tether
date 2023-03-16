@@ -2,6 +2,16 @@ import { UserApiRequest } from '@/types/api'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 
+const selectOptions = {
+  email: true,
+  id: true,
+  image: true,
+  name: true,
+  username: true,
+  followers: true,
+  following: true,
+  posts: true
+}
 
 export default async function userHandler(
   req: UserApiRequest,
@@ -11,24 +21,15 @@ export default async function userHandler(
   
   switch (method) {
     case 'GET':
-      // Get data from your database
-      const user = await prisma?.user.findUnique({
-        where: { email: query.email },
-        select: {
-          email: true,
-          id: true,
-          image: true,
-          name: true,
-          username: true,
-          followers: true,
-          following: true,
-          posts: true
-        },
-      })
-      if(!user) {
-        return res.status(404).json({ message: "User not found" })
-      }
-      res.status(200).json({ message: "User returned successfully!", data: user})
+      // // Get data from your database
+      // const user = await prisma?.user.findUnique({
+      //   where: { email: query.email },
+      //   select: selectOptions,
+      // })
+      // if(!user) {
+      //   return res.status(404).json({ message: "User not found" })
+      // }
+      // res.status(200).json({ message: "User returned successfully!"})
       break;
     case 'PUT':
       if(body.username) {
