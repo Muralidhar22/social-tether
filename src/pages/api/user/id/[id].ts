@@ -6,7 +6,7 @@ export default async function userHandler(
   res: NextApiResponse
 ) {
   const { query, method, body } = req
-  const id = query.id as string
+  const email = query.email as string
 
   const selectOptions = {
     email: true,
@@ -22,12 +22,12 @@ export default async function userHandler(
             let user;
             try {
               user = await prisma?.user.findUnique({
-                where: { id },
+                where: { email },
                 select: selectOptions,
               })
               
             } catch (error) {
-              console.log({error})
+              console.log("sadas",{error})
             }
             if(!user) {
               return res.status(404).json({ message: "User not found" })

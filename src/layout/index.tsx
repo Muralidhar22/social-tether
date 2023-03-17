@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import Logo from "@/components/Logo";
 import DarkModeToggle from '@/components/DarkModeToggle';
-import { getUser, usersEndpoint as cacheKey } from '@/lib/api/userApi';
+import { getUserByEmail, usersEndpoint } from '@/lib/api/userApi';
 import { UserType } from '@/types';
 import { useSession } from 'next-auth/react';
 import UserImage from '@/components/UserImage';
@@ -18,7 +18,7 @@ type Props = {
 }
 
 const Layout = ({ children }: Props) => {
-    const { data } = useSession()
+    const cacheKey = usersEndpoint
     const { data: userResponse } = useSWR(cacheKey,() => getUser(data?.user?.email ?? ""))
 
     return (

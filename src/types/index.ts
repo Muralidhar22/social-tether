@@ -1,10 +1,20 @@
 export type PostsFilterType = "all" | "following"
 
+export type UserFollowType = {
+    isFollowed: boolean;
+    isFollowing: boolean;
+    id?: string | null;
+}
+
 export type PostType = {
     id: string;
     content: string;
     authorId: string;
     image: string;
+    updatedAt: any;
+    createdAt: any;
+    author: UserType;
+    likes: LikesType[];
 }
 
 export type CommentType = {
@@ -26,7 +36,4 @@ export type UserType = {
     image?: string;
     name?: string;
     bio?: string;
-    followers: UserType[];
-    following: UserType[];
-    posts: PostType[];
 }

@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import Link from "next/link";
 import Image from 'next/image';
 import { InferGetServerSidePropsType } from 'next'
-import { SWRResponse } from 'swr';
 
+import { UserFollowType } from '@/types';
 import { FollowApiResponse } from '@/types/api';
 import { UserType } from '@/types';
 import { signOut } from "next-auth/react";
@@ -12,26 +12,50 @@ import { authenticatedRoute } from '@/utils/redirection';
 import getLayout from '@/layout';
 import Posts from '@/components/posts/Posts';
 import useSWR from "swr";
-import { getUserByUsername, usernameEndpoint as userCacheKey } from '@/lib/api/userApi';
-import { getFollow, followEndpoint as followCacheKey } from '@/lib/api/followApi';
+import { getUserById, usernameEndpoint as userCacheKey } from '@/lib/api/userApi';
+import { 
+  getIsUserFollowInfo,
+  getUserFollowCount,
+  followCountEndpoint as followCountCacheKey,
+  followUserEndpoint as followCacheKey,
+  addFollow,
+  removeFollow } from '@/lib/api/followApi';
+import { getPostsCount, postsCountEndpoint } from '@/lib/api/postApi';
+import { addFollowOptions } from '@/lib/helperFunctions/followMutationOptions';
 
 import UserImage from '@/components/UserImage';
 
-export const getServerSideProps: GetServerSideProps = authenticatedRoute
+export const getServerSideProps: GetServerSideProps<{ sessionUser: UserType }> = authenticatedRoute
 
 const Profile =  ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter()
   const { username } = router.query
   const userDetailsCacheKey = userCacheKey + username
-  const isSessionUserProfile = sessionUser.username === username 
-  const { data: userResponse, isLoading, error } = useSWR(userDetailsCacheKey,() => getUserByUsername(username as string));
-  const userFollowCacheKey = followCacheKey + sessionUser.id + userResponse?.data.id
-  const { data: followResponse, isLoading: followInfoLoading, error: followInfoError } = useSWR(userFollowCacheKey,() => {
-    if(userResponse?.data) {
-      return getFollow(sessionUser.id, userResponse?.data.id);
+  const isSessionUserProfile = sessionUser?.username === username 
+  const { data: userResponse, mutate: userMutate, isLoading, error } = useSWR(userDetailsCacheKey,() => getUserByUsername(username as string));
+  const userFollowCacheKey = followCacheKey + sessionUser?.id + userResponse?.data.id
+  const { data: followData, mutate: followMutate, isLoading: followInfoLoading, error: followInfoError } = useSWR(userFollowCacheKey,() => getIsUserFollowInfo(sessionUser?.id, userResponse?.data.id))
+  const { data: userFollowCount } = useSWR(followCountCacheKey + userResponse?.data?.username, () => getUserFollowCount(userResponse?.data.id))
+  const { data: userPostsInfo, isLoading: userPostsInfoLoading } = useSWR(postsCountEndpoint + userResponse?.data?.username,() => getPostsCount(userResponse?.data.id))
+  console.log({userPostsInfo, userPostsInfoLoading })
+
+  const addFollowClickHandler = async () => {
+    if(userResponse?.data && followData) { 
+      await followMutate(
+        addFollow(sessionUser?.id, userResponse?.data.id, followData),
+        addFollowOptions()
+      )
+      userMutate()
     }
-    return null
-  })
+  }
+  
+  const removeFollowClickHandler = async () => {
+    if(userResponse?.data && followData?.id) {
+      await removeFollow(followData.id)
+      followMutate()
+      userMutate()
+    }
+  }
 
     return(
         <>
@@ -50,23 +74,23 @@ const Profile =  ({ sessionUser }: InferGetServerSidePropsType<typeof getServerS
                 height={100}
               />
               <h2 className="text-center">{userResponse?.data?.username}</h2>
-              {!isSessionUserProfile && followResponse &&
+              {!isSessionUserProfile && followData &&
               (
-                followResponse.data?.isFollowing
-                ? <button className="font-semibold px-2 py-4 border rounded border-black dark:border-white">Following</button>
-                : <button className="cursor-pointer px-2 py-4 border rounded bg-black text-white dark:bg-white dark:text-black font-semibold">Follow</button>
+                followData?.isFollowing
+                ? <button onClick={removeFollowClickHandler} className="font-semibold px-2 py-4 border rounded border-black dark:border-white">Following</button>
+                : <button className="cursor-pointer px-2 py-4 border rounded bg-black text-white dark:bg-white dark:text-black font-semibold" onClick={addFollowClickHandler}>Follow</button>
               )
               }
               <div className="flex justify-center gap-5">
-                <span className="flex gap-2">Followers&nbsp;{userResponse?.data?.followers.length}</span>
-                <span className="flex gap-2">Following&nbsp;{userResponse?.data?.followers.length}</span>
-                <span className="flex gap-2">Posts&nbsp;{userResponse?.data?.posts.length}</span>
+                <span className="flex gap-2">Followers&nbsp;{userFollowCount?.followingCount}</span>
+                <span className="flex gap-2">Following&nbsp;{userFollowCount?.followerCount}</span>
+                <span className="flex gap-2">Posts&nbsp;{userPostsInfo?.count}</span>
               </div>
             </div>
           </div>
           {}
           {
-            sessionUser.username === userResponse?.data?.username
+            sessionUser?.username === userResponse?.data?.username
             &&
             <>
               <Link href={`/${username}?edit=true`} shallow>Edit profile</Link>

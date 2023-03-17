@@ -22,8 +22,8 @@ export default async function userHandler(
   switch (method) {
     case 'GET':
       // // Get data from your database
-      // const user = await prisma?.user.findUnique({
-      //   where: { email: query.email },
+      // const user = await prisma?.user.findFirst({
+      //   where: { email: query.email , },
       //   select: selectOptions,
       // })
       // if(!user) {

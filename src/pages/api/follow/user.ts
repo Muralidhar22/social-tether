@@ -22,17 +22,27 @@ export default async function userHandler(
         }
       })
 
-      return res.status(200).json({ message: "Follows returned successfully!", data: { isFollowing: !!isFollowingData, isFollowed: !!isFollowerData } })
+      return res.status(200).json({ message: "Follows returned successfully!", data: { isFollowing: !!isFollowingData, isFollowed: !!isFollowerData, id: isFollowingData?.id ?? null } })
     case 'PUT':
       if(query.q === "add") {
-          
-          res.status(200).json({ message: "Follow updated successfully!" })
+          const addData = await prisma?.userFollow.create({
+            data: {
+              followerId: body.followerId,
+              followingId: body.followingId
+            }
+          })
+        return  res.status(200).json({ message: "Follow updated successfully!", data: { id: addData?.id ?? null }})
       } else if (query.q === "remove") {
-        res.status(200).json({ message: "Follow updated successfully!" })
+        const removeData = await prisma?.userFollow.delete({
+          where: {
+            id: body.userFollowId
+          }
+        }) 
+        console.log({removeData})
+        return res.status(200).json({ message: "Follow updated successfully!" })
       }
-      break;
     default:
       res.setHeader('Allow', ['GET', 'PUT'])
-      res.status(405).end(`Method ${method} Not Allowed`)
+      return res.status(405).end(`Method ${method} Not Allowed`)
   }
 }

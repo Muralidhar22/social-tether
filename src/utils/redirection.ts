@@ -3,37 +3,50 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 
-import { getUser } from "@/lib/api/userApi";
+import { getUserByEmail } from "@/lib/api/userApi";
 
 export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     const session = await getServerSession(ctx.req, ctx.res, authOptions)
-    const response = await getUser(session?.user?.email ?? "")
-
-  if(!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false
+    let userInfoResponse;
+  
+    if(!session) {
+      return {
+        redirect: {
+          destination: "/login",
+          permanent: false
+        }
       }
     }
-  }
-  else if(!response?.data?.username) {
+    
+   if(session.user?.email) {
+    userInfoResponse = await getUserByEmail(session.user.email)
+    if(!userInfoResponse?.data?.username && ctx.resolvedUrl !== "/new/user") {
+        return {
+          redirect: {
+            destination: "/new/user",
+            permanent: false
+          }
+        }
+    } else if(userInfoResponse?.data?.username && ctx.resolvedUrl === "/new/user") {
+        return {
+          redirect: {
+            destination: `/${userInfoResponse.data.username}`,
+            permanent: false
+          }
+        }
+      }
+    }
+    
+    if(!userInfoResponse) {
       return {
         redirect: {
-          destination: "/new/user",
+          destination: "/500",
           permanent: false
         }
       }
-  } else if(response?.data?.username && ctx.resolvedUrl === "/new/user") {
-      return {
-        redirect: {
-          destination: `/${response.data.username}`,
-          permanent: false
-        }
-      }
+    }
+
+    return {
+      props: { sessionUser: userInfoResponse.data }
     } 
-  
-  return {
-    props: { sessionUser: response.data }
-  }
 }

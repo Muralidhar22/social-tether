@@ -30,10 +30,9 @@ export default async function userHandler(
                   }
               }
           )
-          res.status(200).json({ message: "Users returned successfully!", data })
+         return res.status(200).json({ message: "Users returned successfully!", data })
         }
-        res.status(400).json({message: "'username' param required"})
-      break
+        return res.status(400).json({message: "'username' param required"})
     default:
       res.setHeader('Allow', ['GET'])
       res.status(405).end(`Method ${method} Not Allowed`)

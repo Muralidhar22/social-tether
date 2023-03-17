@@ -6,13 +6,12 @@ import { useRouter } from "next/router";
 import { getPosts,postsUrlEndpoint } from "@/lib/api/postApi";
 
 type Props = {
-    endpoint: URL
     ComponentToRender: React.FC<any>
     cacheKey: any
-    fetcher: () => void
+    fetcher: () => any
 }
 
-const InfiniteScrollComponent = ({ endpoint, ComponentToRender }: Props) => {
+const InfiniteScrollComponent = ({ fetcher, cacheKey, ComponentToRender }: Props) => {
     const [fetching, setFetching] = useState<boolean>(false)
     const loaderRef = useRef(null)
     const [loading, setLoading] = useState<boolean>(false)
@@ -37,7 +36,7 @@ const InfiniteScrollComponent = ({ endpoint, ComponentToRender }: Props) => {
     return (
         <div>
             {[1, 2 , 3, 4, 5, 6].map((val) => (
-                <ComponentToRender key={val} className="w-96 h-96 bg-rose-500 mb-4" />
+                <ComponentToRender key={val} />
             ))}
 
             {loading && <div>loading...</div>}

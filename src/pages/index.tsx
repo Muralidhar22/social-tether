@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image';
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { GetServerSideProps } from 'next';
 import { InferGetServerSidePropsType } from 'next';
@@ -16,12 +15,11 @@ import SideNav from '@/components/SideNav';
 import UserImage from '@/components/UserImage';
 import { getRandomUsers, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
 
-export const getServerSideProps: GetServerSideProps<{sessionUser: UserType}>  = authenticatedRoute
+export const getServerSideProps = authenticatedRoute
 
 const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { data: session } = useSession()
   const [postsFilter, setPostsFilter] = useState<PostsFilterType>("following")
-  const { isLoading, data: randomUsers, error } = useSWR(cacheKey,() => getRandomUsers(sessionUser.username))
+  const { isLoading, data: randomUsers, error } = useSWR(cacheKey,() => getRandomUsers(sessionUser?.username))
   const router = useRouter()
 
   useEffect(() => {
@@ -50,7 +48,7 @@ const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
             <span>loading...</span>
             :
             randomUsers?.data && randomUsers?.data.map((user) => (
-              <span className="bg-red-500 text-white font-bold m-2 flex gap-3">
+              <span key={user.id} className="bg-red-500 text-white font-bold m-2 flex gap-3">
                 <UserImage 
                     imageSrc={user.image}
                 />
@@ -59,11 +57,10 @@ const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
             ) )
           }
           </div>
-          <h2>{sessionUser.username}</h2>
-              <SideNav username={sessionUser.username} />
+          <h2>{sessionUser?.username ?? ""}</h2>
+              <SideNav username={sessionUser?.username ?? ""} />
               <div className="flex justify-center">
-               <Posts filter={postsFilter} sessionUserId={sessionUser.id} />
-              <Link href={`/${sessionUser.username}`} className="mt-5 px-10 py-1">Profile</Link>
+               <Posts filter={postsFilter} sessionUserId={sessionUser?.id ?? ""} />
           </div>
         </div>
       </div>

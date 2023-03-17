@@ -17,22 +17,25 @@ export default async function postHandler(
           const data = await prisma?.post.findMany({
             take: 10
           })
-         return res.status(200).json({ message: "Posts returned successfully!", data})
+         return res.status(200).json({ message: "All posts returned successfully!", data})
       } else if (query.q === "following") {
         const followingData = await prisma?.userFollow.findMany({
           where: { 
-            followingId: sid
+            followerId: sid
           }
         })
-        console.log({followingData})
         const data = await prisma?.post.findMany({
-          where: { authorId }
+          where: { 
+            authorId: {
+              in: followingData?.map((followingUser) => followingUser.followingId)
+            }
+          }
         })
+        console.log({followingData, posts: data})
        return res.status(200).json({message: "Posts returned successfully!", data})
       }
       break;
     case 'POST':
-
        try{
          const data = await prisma?.post.create({
           data: {

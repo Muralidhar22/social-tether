@@ -43,6 +43,7 @@ export interface FollowApiRequest extends NextApiRequest {
   body: {
     followerId: string;
     followingId: string;
+    userFollowId: string;
   }
 }
 export interface CommentsApiRequest extends NextApiRequest {
@@ -55,5 +56,5 @@ export interface LikesApiRequest extends NextApiRequest {
 
 export type FollowApiResponse = {
   message: string
-  data?: { isFollowed: boolean, isFollowing: boolean }
+  data?: { isFollowed: boolean, isFollowing: boolean, id: string | null } | { id: string | null }
 }
