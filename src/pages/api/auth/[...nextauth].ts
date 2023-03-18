@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "prisma/client";
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
+import { compare } from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
   adapter: prisma ? PrismaAdapter(prisma) : undefined,
@@ -20,20 +21,34 @@ export const authOptions: NextAuthOptions = {
     }),
     CredentialsProvider({
       name: "credentials",
-      credentials: {},
+      credentials: {
+        email: {},
+        password: {}
+      },
       async authorize(credentials, req) {
-        console.log({credentials})
-        const result = await prisma?.user.findUnique({
-          where: { email: req.body?.email }
-        })
-        if(!result) {
-          throw new Error("No user found")
-        }
-        // check password
-        return result
+
+          const result = await prisma?.user.findUnique({
+            where: { email: credentials?.email }
+          })
+          
+          if(!result) {
+            throw new Error("No user found")
+          }
+          
+          const checkPassword = (result.password && credentials?.password)
+          && await compare(credentials.password, result.password)
+          
+          if(!checkPassword || result.email !== credentials?.email) {
+            throw new Error("Email or Password doesn't match");
+          }
+          
+          return result
       },
     }),
   ],
+  session: {
+    strategy: "jwt"
+  }
 }
 
 export default NextAuth(authOptions)

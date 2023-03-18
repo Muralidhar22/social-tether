@@ -12,13 +12,13 @@ import Post from "./Post";
 
 type PostsPropsType = {
     filter: PostsFilterType
-    sessionUserId: string
+    userId: string
 }
 
-const PostsContainer = ({ filter,sessionUserId, }: PostsPropsType) => {    
+const PostsContainer = ({ filter,userId, }: PostsPropsType) => {    
 
     return (
-        <InfiniteScrollComponent cacheKey={cacheKey} fetcher={() => getPosts(filter, sessionUserId)} ComponentToRender={Post} />
+        <InfiniteScrollComponent cacheKey={cacheKey} fetcher={() => getPosts(filter, userId)} ComponentToRender={Post} />
     )
 }
 

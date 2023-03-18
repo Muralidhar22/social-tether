@@ -33,12 +33,13 @@ export default async function userHandler(
           })
         return  res.status(200).json({ message: "Follow updated successfully!", data: { id: addData?.id ?? null }})
       } else if (query.q === "remove") {
+        console.log({body},"ha")
         const removeData = await prisma?.userFollow.delete({
           where: {
             id: body.userFollowId
           }
         }) 
-        console.log({removeData})
+        console.log({removeData},"wahhh")
         return res.status(200).json({ message: "Follow updated successfully!" })
       }
     default:

@@ -11,9 +11,9 @@ export const addFollowOptions = () => {
 
 export const removeFollowOptions = () => {
     return {
-        optimisticData: (userFollowData: UserFollowType) => ({...userFollowData, isFollowing: false }),
+        optimisticData: (currentData: UserFollowType | undefined) => ({...currentData,isFollowed: currentData?.isFollowed ?? false, isFollowing: false }),
         rollbackOnError: true,
-        populateCache: (_removedId: string, currentData: UserFollowType) => ({...currentData, id: null, isFollowing: false}),
+        populateCache: (_removedId: string, currentData: UserFollowType | undefined) => ({isFollowed: currentData?.isFollowed ?? false, id: null, isFollowing: false}),
         revalidate: false
     }
 }

@@ -35,15 +35,13 @@ export default async function commentsHandler(
                     password: await hash(password,12)
                 }
             })
-            
-            return res.status(201).json({ message: "User created successfully", data })
+            console.log("registered data",{data})
+            return res.status(201).json({ message: "User created successfully" })
         } catch(error) {
             return res.status(500).json({ message: "Something went wrong", error })
         }
-        
-      break;
     default:
       res.setHeader('Allow', ['POST'])
-      res.status(405).end(`Method ${method} Not Allowed`)
+      return res.status(405).end(`Method ${method} not allowed`)
   }
 }

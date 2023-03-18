@@ -11,7 +11,7 @@ import {
     addFollow,
     removeFollow } from '@/lib/api/followApi';
 import { getPostsCount, postsCountEndpoint } from '@/lib/api/postApi';
-import { addFollowOptions } from '@/lib/helperFunctions/followMutationOptions';
+import { addFollowOptions, removeFollowOptions } from '@/lib/helperFunctions/followMutationOptions';
 import { signOut } from "next-auth/react";
 import UserImage from "./UserImage";
 
@@ -30,13 +30,13 @@ const Profile = ({
 }: ProfilePropsType) => {
 const postCountCacheKey = `${postsCountEndpoint}/${userData.username}`
 const { data:followData, mutate: followMutate } = useSWR(followCacheKey,() => getSessionUserFollowInfo(sessionUserId, userData.id))
-const { data:userFollowData } = useSWR(followCountCacheKey, () => getUserFollowCount(userData.id))
+const { data:userFollowCount, mutate: mutateUserFollowCount } = useSWR(followCountCacheKey, () => getUserFollowCount(userData.id))
 const { data: userPostsInfo, isLoading: userPostsInfoLoading } = useSWR(postCountCacheKey,() => getPostsCount(userData.username))
 
 
-useEffect(() => {
+// useEffect(() => {
     
-},[])
+// },[])
 
 const addFollowClickHandler = async () => {
 if(followData){
@@ -44,16 +44,18 @@ if(followData){
       addFollow(sessionUserId, userData.id, followData),
       addFollowOptions()
     )
-    userMutate()
+    mutateUserFollowCount()
 }
     
   }
   
 const removeFollowClickHandler = async () => {
     if(followData?.id) {
-      await removeFollow(followData.id)
-      followMutate()
-      userMutate()
+      await followMutate(
+        removeFollow(followData.id),
+        removeFollowOptions()
+      )
+      mutateUserFollowCount()
     }
   }
 
@@ -86,8 +88,8 @@ const removeFollowClickHandler = async () => {
               } 
               {/* User following, followers, posts count */}
             <div className="flex justify-center gap-5">
-                <span className="flex gap-2">Followers&nbsp;{userFollowData?.followingCount}</span>
-                <span className="flex gap-2">Following&nbsp;{userFollowData?.followerCount}</span>
+                <span className="flex gap-2">Followers&nbsp;{userFollowCount?.followerCount}</span>
+                <span className="flex gap-2">Following&nbsp;{userFollowCount?.followingCount}</span>
                 <span className="flex gap-2">Posts&nbsp;{userPostsInfo?.count}</span>
               </div>
             </div>

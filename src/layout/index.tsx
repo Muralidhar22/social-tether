@@ -22,7 +22,7 @@ const Layout = ({ children, sessionUserId }: Props) => {
     const cacheKey = `${userIdEndpoint}/${sessionUserId}`
     const [ sessionUserData, mutateSessionUser ] = useSWRSessionState(cacheKey,() => getUserById(sessionUserId))
     // const { data: userResponse } = useSWR(cacheKey,() => getUser(data?.user?.email ?? ""))
-console.log({sessionUserData})
+
     return (
         <div className="p-5">
         <nav className="flex justify-between items-center">

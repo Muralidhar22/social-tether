@@ -11,6 +11,7 @@ export const usersEndpoint = "/api/user"
 export const randomUsersEndpoint = "/api/user/random"
 export const userEmailEndpoint = "/api/user/email"
 export const userIdEndpoint = "/api/user/id"
+export const userUsernameEndpoint = "/api/user/username"
 
 export const getUserByEmail = async (email: string): Promise<ResponseType<UserType> | undefined> => {
         if(email) {
@@ -28,9 +29,7 @@ export const getUserById = async (id: string): Promise<UserType | undefined> => 
 
 export const getUserByUsername = async (username: string): Promise<UserType | undefined> => {
     if(username) {
-        const { data: response, status } = await tetherAxios.get(usersEndpoint, {
-            params: username
-        })
+        const { data: response, status } = await tetherAxios.get(`${userUsernameEndpoint}/${username}`)
         return response.data
     }
 }

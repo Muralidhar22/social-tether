@@ -52,7 +52,7 @@ const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
                 <UserImage 
                     imageSrc={user.image}
                 />
-                   <Link href={`/${user.username}`}>{user.name}</Link>
+                   <Link href={`/${user.username}`}>{user.username}</Link>
               </span>
             ) )
           }
@@ -60,7 +60,7 @@ const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
           <h2>{sessionUser?.username ?? ""}</h2>
               <SideNav username={sessionUser?.username ?? ""} />
               <div className="flex justify-center">
-               <Posts filter={postsFilter} sessionUserId={sessionUser?.id ?? ""} />
+               <Posts filter={postsFilter} userId={sessionUser?.id} />
           </div>
         </div>
       </div>

@@ -22,7 +22,12 @@ const Login = () => {
     })
     
     async function onSubmit(values: LoginFormValues) {
-        console.log(values)
+        signIn('credentials',{
+            redirect: true,
+            email: values.email,
+            password: values.password,
+            callbackUrl: "/"
+        })
     }
     
     return(

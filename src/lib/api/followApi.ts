@@ -32,9 +32,12 @@ export const addFollow = async (followerId: string | undefined, followingId: str
     }
 }
 
-export const removeFollow = async (userFollowId: string): Promise<UserFollowType> => {
-    const { data: removeResponse } = await tetherAxios.put(followUserEndpoint, {
-        userFollowId
-    }, { params: { q: "remove" } })
-    return removeResponse.id;
+export const removeFollow = async (userFollowId: string): Promise<UserFollowType | undefined> => {
+    if(userFollowId) {
+        console.log("inside remove fllow api ")
+        const { data: removeResponse } = await tetherAxios.put(followUserEndpoint, {
+            userFollowId
+        }, { params: { q: "remove" } })
+        return removeResponse.id;
+    }
 } 

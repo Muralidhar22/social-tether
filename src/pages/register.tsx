@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { RegisterFormValues } from "@/types/formValues";
 import registerValidate from "@/utils/registerValidate";
+import tetherAxios from "@/lib/api/axiosInstance";
 
 const Register = () => {
     const [show, setShow] = useState({
@@ -25,7 +26,17 @@ const Register = () => {
     })
     
     async function onSubmit (values: RegisterFormValues) {
-        console.log(values)
+        console.log({...values})
+        try{
+            const { data, status } = await tetherAxios.post("api/auth/signup", {
+                username: values.username,
+                password: values.password,
+                email: values.email
+            })
+            console.log({data, status})
+        } catch(error) {
+            
+        }
     }
     
     return(

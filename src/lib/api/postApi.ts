@@ -9,7 +9,6 @@ export const getPostsCount = async (userId: string | undefined) => {
       const { data: countResponse, status } = await tetherAxios.get(postsCountEndpoint, {
          params: { userId }
       })
-      console.log("broooooo", { countResponse })
       return countResponse.data
    }
 }
