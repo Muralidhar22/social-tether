@@ -1,21 +1,17 @@
-import useSWR from "swr"
+import Image from "next/image"
 
-import { getPosts, postsEndpoint as cacheKey } from "@/lib/api/postApi";
-import InfiniteScrollComponent from "../InfiniteScroll";
-import { PostsFilterType, PostType, UserType } from "@/types";
+import UserImage from "@/components/UserImage"
+import { PostType, UserType } from "@/types"
 
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdOutlineModeComment } from "react-icons/md";
-import Image from "next/image";
-import UserImage from "../UserImage";
-import { userEmailEndpoint as userCacheKey } from "@/lib/api/userApi";
 
 type PostContainerPropsType = {
     postData: PostType
     userData: UserType
 }
 
-const PostContainer = ({ postData }: PostContainerPropsType) => {
+const Post = ({ postData }: PostContainerPropsType) => {
     // const { data: userData } = useSWR(userCacheKey + data?.user?.email,getUser(data?.user?.email ?? ""))
     
     const onClickComment = () => {
@@ -55,19 +51,5 @@ const PostContainer = ({ postData }: PostContainerPropsType) => {
         
     )
 }
-    
-    
 
-type PostsPropsType = {
-    filter: PostsFilterType
-    sessionUserId: string
-}
-
-const Posts = ({ filter,sessionUserId, }: PostsPropsType) => {    
-
-    return (
-        <InfiniteScrollComponent cacheKey={cacheKey} fetcher={() => getPosts(filter, sessionUserId)} ComponentToRender={PostContainer} />
-    )
-}
-
-export default Posts;
+export default Post;

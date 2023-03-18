@@ -1,26 +1,32 @@
 import type { ReactElement, ReactNode } from 'react'
 import type { NextPage } from 'next'
 import '@/styles/globals.css'
+import { InferGetServerSidePropsType } from 'next';
 import type { AppProps } from 'next/app'
 import { Inter } from '@next/font/google'
 import { SessionProvider } from "next-auth/react"
 import Script from 'next/script'
 import { Toaster } from "react-hot-toast"
 
+import { authenticatedRoute } from '@/utils/redirection';
+
 const inter = Inter({ subsets: ['latin'], weight: ["400","500","600","700"],variable: "--font-inter"  })
 
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode
+  getLayout?: (page: ReactElement, sessionUserId: string) => ReactNode
 }
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
+  Component: NextPageWithLayout;
 }
+
+export const getServerSideProps = authenticatedRoute
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
-
+  const sessionUser = pageProps.sessionUser
+  
   return (
     <>
       <Script 
@@ -46,7 +52,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <SessionProvider session={pageProps.session}>
           {
             getLayout(
-              <Component {...pageProps} />
+              <Component {...pageProps} />,
+              sessionUser?.id
             )
           }
         </SessionProvider>

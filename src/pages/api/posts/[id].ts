@@ -14,7 +14,7 @@ export default function postHandler(
   const name = query.name as string
 
   switch (method) {
-    case 'DELETE':
+    case 'GET':
       
       res.status(200).json({ message: "Deleted post successfully!" })
       break

@@ -6,7 +6,7 @@ export default async function userHandler(
   res: NextApiResponse
 ) {
   const { query, method, body } = req
-  const email = query.email as string
+  const id = query.id as string
 
   const selectOptions = {
     email: true,
@@ -22,7 +22,7 @@ export default async function userHandler(
             let user;
             try {
               user = await prisma?.user.findUnique({
-                where: { email },
+                where: { id },
                 select: selectOptions,
               })
               
@@ -37,7 +37,7 @@ export default async function userHandler(
               if(body.username) {
                 try{
                   const updatedUser = await prisma?.user.update({
-                    where: { email },
+                    where: { id },
                     data: {
                         username: body.username
                     }

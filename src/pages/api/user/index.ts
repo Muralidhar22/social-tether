@@ -8,9 +8,6 @@ const selectOptions = {
   image: true,
   name: true,
   username: true,
-  followers: true,
-  following: true,
-  posts: true
 }
 
 export default async function userHandler(
@@ -18,18 +15,17 @@ export default async function userHandler(
   res: NextApiResponse
 ) {
   const { query, method, body } = req
-  
+  const username = query.username
   switch (method) {
     case 'GET':
-      // // Get data from your database
-      // const user = await prisma?.user.findFirst({
-      //   where: { email: query.email , },
-      //   select: selectOptions,
-      // })
-      // if(!user) {
-      //   return res.status(404).json({ message: "User not found" })
-      // }
-      // res.status(200).json({ message: "User returned successfully!"})
+      const user = await prisma?.user.findUnique({
+        where: { username },
+        select: selectOptions,
+      })
+      if(!user) {
+        return res.status(404).json({ message: "User not found" })
+      }
+      res.status(200).json({ message: "User returned successfully!"})
       break;
     case 'PUT':
       if(body.username) {

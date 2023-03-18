@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { authenticatedRoute } from '@/utils/redirection';
 import { PostsFilterType, UserType } from '@/types';
 import getLayout from '@/layout';
-import Posts from '@/components/posts/Posts';
+import Posts from '@/components/posts/PostsContainer';
 import SideNav from '@/components/SideNav';
 import UserImage from '@/components/UserImage';
 import { getRandomUsers, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';

@@ -15,8 +15,10 @@ const InfiniteScrollComponent = ({ fetcher, cacheKey, ComponentToRender }: Props
     const [fetching, setFetching] = useState<boolean>(false)
     const loaderRef = useRef(null)
     const [loading, setLoading] = useState<boolean>(false)
-    // const {  data, error, isLoading,setSize, size, mutate } = useSWRInfinite()
-    const {  } = useSWR
+    const {  data, error, isLoading, setSize, size, mutate } = useSWRInfinite(
+                
+    )
+
     
     useEffect(() => {
         const observer = new IntersectionObserver(entries => {

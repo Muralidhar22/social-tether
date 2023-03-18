@@ -5,22 +5,24 @@ import Image from 'next/image';
 
 import Logo from "@/components/Logo";
 import DarkModeToggle from '@/components/DarkModeToggle';
-import { getUserByEmail, usersEndpoint } from '@/lib/api/userApi';
+import { getUserById, userIdEndpoint } from '@/lib/api/userApi';
 import { UserType } from '@/types';
-import { useSession } from 'next-auth/react';
 import UserImage from '@/components/UserImage';
+import useSWRSessionState from '@/hooks/useSWRSessionState';
 
 import { FaRegUser } from "react-icons/fa";
 
 
 type Props = {
     children: React.ReactNode
+    sessionUserId: string
 }
 
-const Layout = ({ children }: Props) => {
-    const cacheKey = usersEndpoint
-    const { data: userResponse } = useSWR(cacheKey,() => getUser(data?.user?.email ?? ""))
-
+const Layout = ({ children, sessionUserId }: Props) => {
+    const cacheKey = `${userIdEndpoint}/${sessionUserId}`
+    const [ sessionUserData, mutateSessionUser ] = useSWRSessionState(cacheKey,() => getUserById(sessionUserId))
+    // const { data: userResponse } = useSWR(cacheKey,() => getUser(data?.user?.email ?? ""))
+console.log({sessionUserData})
     return (
         <div className="p-5">
         <nav className="flex justify-between items-center">
@@ -29,9 +31,9 @@ const Layout = ({ children }: Props) => {
             <div className="flex gap-5 item-center">
                 <DarkModeToggle />
                 <Link href="/new/post">New post</Link>
-                <UserImage 
+                {/* <UserImage 
                     imageSrc={userResponse?.data?.image}
-                />
+                /> */}
             </div>
         </nav>
             {children}
@@ -39,9 +41,9 @@ const Layout = ({ children }: Props) => {
     )
 }
 
-const getLayout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => {
+const getLayout = (page: ReactElement<any, string | JSXElementConstructor<any>>, sessionUserId: string) => {
     return (
-      <Layout>
+      <Layout sessionUserId={sessionUserId}>
         {page}
       </Layout>
     )

@@ -14,7 +14,7 @@ export const getUserFollowCount = async (userId: string | undefined) => {
     return followCount.data;
 } 
 
-export const getIsUserFollowInfo = async (followerId: string | undefined, followingId: string | undefined): Promise<UserFollowType> => {
+export const getSessionUserFollowInfo = async (followerId: string | undefined, followingId: string | undefined): Promise<UserFollowType> => {
     const { data: followResponse } = await tetherAxios.get(followUserEndpoint, {
         params: { followerId, followingId }
     })

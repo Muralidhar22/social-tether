@@ -19,14 +19,21 @@ export const getUserByEmail = async (email: string): Promise<ResponseType<UserTy
         }
 }
 
-export const getUserById = async (email: string): Promise<ResponseType<UserType> | undefined> => {
-        if(email) {
-            const { data, status } = await tetherAxios.get(`${userEmailEndpoint}/${email}`)
-            return data;
+export const getUserById = async (id: string): Promise<UserType | undefined> => {
+        if(id) {
+            const { data: response, status } = await tetherAxios.get(`${userIdEndpoint}/${id}`)
+            return response.data;
         }
 }
 
-
+export const getUserByUsername = async (username: string): Promise<UserType | undefined> => {
+    if(username) {
+        const { data: response, status } = await tetherAxios.get(usersEndpoint, {
+            params: username
+        })
+        return response.data
+    }
+}
 
 export const updateUsername = async (newUsername: string) => {
     const { data } = await tetherAxios.put(usersEndpoint,{ username: newUsername })
