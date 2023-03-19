@@ -1,7 +1,5 @@
 import { UserFollowType } from "@/types";
-import { FollowApiResponse } from "@/types/api";
 import tetherAxios from "./axiosInstance";
-
 
 export const followCountEndpoint = "/api/follow/count";
 export const followUserEndpoint = "/api/follow/user"

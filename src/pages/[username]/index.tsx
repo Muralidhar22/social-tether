@@ -1,21 +1,13 @@
 import { useRouter } from 'next/router';
-import Link from "next/link";
-import Image from 'next/image';
 import { InferGetServerSidePropsType } from 'next'
+import useSWR from "swr";
 
-import { UserFollowType } from '@/types';
-import { FollowApiResponse } from '@/types/api';
-import { UserType } from '@/types';
-import { signOut } from "next-auth/react";
 import { authenticatedRoute } from '@/utils/redirection';
 import getLayout from '@/layout';
-import Posts from '@/components/posts/PostsContainer';
-import useSWR from "swr";
 import { getUserByUsername,getUserById, userIdEndpoint, userUsernameEndpoint } from '@/lib/api/userApi';
 
 import Profile from '@/components/Profile';
 
-import UserImage from '@/components/UserImage';
 import useSWRSessionState from '@/hooks/useSWRSessionState';
 
 export const getServerSideProps = authenticatedRoute
