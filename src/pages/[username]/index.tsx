@@ -28,7 +28,7 @@ const ProfilePage =  ({ sessionUser }: InferGetServerSidePropsType<typeof getSer
   const { data: visitedUserData, mutate: visitedUserMutate, isLoading, error } = useSWR(visitedUserCacheKey,() => getUserByUsername(usernameFromRoute as string));
   const [sessionUserData, mutateSessionUser ] = useSWRSessionState(sessionUserCacheKey, () => getUserById(sessionUser.id))
   const isSessionUserProfile = sessionUserData?.username === usernameFromRoute
-
+console.log(sessionUserData)
   return(
     <>
     {/* {
@@ -40,13 +40,12 @@ const ProfilePage =  ({ sessionUser }: InferGetServerSidePropsType<typeof getSer
     {
       isSessionUserProfile
       ?
-      (
-      sessionUserData &&          
+      (sessionUserData &&          
         <Profile
           userData={sessionUserData}
           userMutate={mutateSessionUser}
           isSessionUserProfile={isSessionUserProfile}
-          sessionUserId={sessionUserData.id}  
+          sessionUserId={sessionUserData?.id}  
         />
       )
       :
@@ -56,7 +55,7 @@ const ProfilePage =  ({ sessionUser }: InferGetServerSidePropsType<typeof getSer
           userData={visitedUserData}
           userMutate={visitedUserMutate}
           isSessionUserProfile={isSessionUserProfile}
-          sessionUserId={sessionUserData.id}
+          sessionUserId={sessionUserData?.id}
         />
       )
     }

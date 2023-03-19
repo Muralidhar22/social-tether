@@ -7,13 +7,15 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { MdOutlineModeComment } from "react-icons/md";
 
 type PostContainerPropsType = {
-    postData: PostType
-    userData: UserType
+    data: PostType;
+    mutateData: () => Promise<any>;
+    page: number;
+    index: number;
 }
 
-const Post = ({ postData }: PostContainerPropsType) => {
+const Post = ({ data, mutateData, page, index }: PostContainerPropsType) => {
     // const { data: userData } = useSWR(userCacheKey + data?.user?.email,getUser(data?.user?.email ?? ""))
-    
+    const postData = data
     const onClickComment = () => {
         
     }

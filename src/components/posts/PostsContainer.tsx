@@ -1,6 +1,5 @@
 import useSWR from "swr"
 
-import { getPosts, postsEndpoint as cacheKey } from "@/lib/api/postApi";
 import InfiniteScrollComponent from "../InfiniteScroll";
 import { PostsFilterType, PostType, UserType } from "@/types";
 
@@ -15,11 +14,27 @@ type PostsPropsType = {
     userId: string
 }
 
-const PostsContainer = ({ filter,userId, }: PostsPropsType) => {    
+const PostsContainer = ({ filter,userId }: PostsPropsType) => {    
+    let url = `api/posts?q=${filter}`
 
-    return (
-        <InfiniteScrollComponent cacheKey={cacheKey} fetcher={() => getPosts(filter, userId)} ComponentToRender={Post} />
-    )
+    switch(filter) {
+        case "all": 
+            return (
+                <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
+            )
+        case "following":
+            return (
+                <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
+            )
+        case "user":
+          url = `${url}&userId=${userId}`
+          return (
+            <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
+        )
+        default: 
+           throw Error("") 
+    }
+    return null;
 }
 
 export default PostsContainer;

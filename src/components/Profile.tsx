@@ -14,6 +14,7 @@ import { getPostsCount, postsCountEndpoint } from '@/lib/api/postApi';
 import { addFollowOptions, removeFollowOptions } from '@/lib/helperFunctions/followMutationOptions';
 import { signOut } from "next-auth/react";
 import UserImage from "./UserImage";
+import PostsContainer from "./posts/PostsContainer";
 
 type ProfilePropsType = {
     userData: UserType;
@@ -104,6 +105,11 @@ const removeFollowClickHandler = async () => {
               </div>
             </>
           }
+          <h2>Posts</h2>
+          <PostsContainer 
+            filter="user"
+            userId={userData.id}
+          />
         </>
     )
 }

@@ -18,15 +18,22 @@ export default async function userHandler(
   const username = query.username
   switch (method) {
     case 'GET':
-      const user = await prisma?.user.findUnique({
-        where: { username },
-        select: selectOptions,
-      })
-      if(!user) {
-        return res.status(404).json({ message: "User not found" })
+      try {
+        const user = await prisma?.user.findUnique({
+          where: { username },
+          select: selectOptions,
+        })
+        if(!user) {
+          return res.status(404).json({ message: "User not found" })
+        }
+   
+        return res.status(200).json({ message: "User returned successfully!", data: user})
+      } catch (error) {
+        console.error(error)
+        return res.status(500).json({message: "Something went wrong!", error})
+      } finally {
+        await prisma?.$disconnect()    
       }
- 
-      return res.status(200).json({ message: "User returned successfully!", data: user})
     default:
       res.setHeader('Allow', ['GET'])
       res.status(405).end(`Method ${method} Not Allowed`)

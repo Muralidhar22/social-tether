@@ -22,7 +22,7 @@ const Post = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
     const onSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault()
         // router
-        console.log("ASdsa ")
+
         let imageCloudinaryUrl;
         if(image) {
             const formData = new FormData()

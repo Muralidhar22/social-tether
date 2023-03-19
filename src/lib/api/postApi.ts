@@ -13,21 +13,21 @@ export const getPostsCount = async (userId: string | undefined) => {
    }
 }
 
-export const getPosts = async (filter: PostsFilterType, sessionUserId: string) => {
- const { data, status } = await tetherAxios.get(postsEndpoint, {
-    params: { q: filter, sid: sessionUserId }
+export const getPosts = async (filter: PostsFilterType, userId: string, cursor?: string) => {
+ const { data: response, status } = await tetherAxios.get(postsEndpoint, {
+    params: { q: filter, userId }
  })
- return data;
+ return response.data;
 }
 
 export const createPost = async (postData: Partial<PostType>) => {
-   console.log({postData})
+
    const { data } = await tetherAxios.post(postsEndpoint, {
          content: postData.content,
          authorId: postData.authorId,
          image: postData.image
    })
-   console.log(data)
+
 }
 
 export const updatePost = async () => {

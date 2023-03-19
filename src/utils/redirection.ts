@@ -8,7 +8,7 @@ import { getUserByEmail } from "@/lib/api/userApi";
 export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     const session = await getServerSession(ctx.req, ctx.res, authOptions)
     let userInfoResponse;
-    console.log({session})
+
     if(!session) {
       return {
         redirect: {

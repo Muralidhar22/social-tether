@@ -17,7 +17,9 @@ export interface PostsApiRequest extends NextApiRequest {
     };
     query: {
       q: PostsFilterType
-      sid: string
+      userId: string
+      cursor: string
+      limit: string
     }
 }
 
@@ -52,9 +54,4 @@ export interface CommentsApiRequest extends NextApiRequest {
 
 export interface LikesApiRequest extends NextApiRequest {
   
-}
-
-export type FollowApiResponse = {
-  message: string
-  data?: { isFollowed: boolean, isFollowing: boolean, id: string | null } | { id: string | null }
 }

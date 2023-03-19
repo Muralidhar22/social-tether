@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
         password: {}
       },
       async authorize(credentials, req) {
-
+        try{
           const result = await prisma?.user.findUnique({
             where: { email: credentials?.email }
           })
@@ -43,6 +43,12 @@ export const authOptions: NextAuthOptions = {
           }
           
           return result
+        }  catch (error) {
+          console.error(error)
+          throw new Error(`Something went wrong, ${error}`)
+      } finally {
+         await prisma?.$disconnect()    
+      }
       },
     }),
   ],

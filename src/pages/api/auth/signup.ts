@@ -20,13 +20,20 @@ export default async function commentsHandler(
         if(!(email && password && username)) {
             return res.status(400).json({ message: "Fields are missing" })
         }
-        
-        const isUsernameEmailExisting = await prisma?.user.findUnique({
-            where: { username_email: { username, email } }
-        })
-        if(isUsernameEmailExisting) {
-            return res.status(422).json({ message: "User already exists" })
+        try{
+            const isUsernameEmailExisting = await prisma?.user.findUnique({
+                where: { username_email: { username, email } }
+            })
+            if(isUsernameEmailExisting) {
+                return res.status(422).json({ message: "User already exists" })
+            }
+        } catch (error) {
+            console.error(error)
+            return res.status(500).json({message: "Something went wrong!", error})
+        } finally {
+           await prisma?.$disconnect()    
         }
+        
         try {
             const data = await prisma?.user.create({
                 data: {
@@ -35,10 +42,12 @@ export default async function commentsHandler(
                     password: await hash(password,12)
                 }
             })
-            console.log("registered data",{data})
-            return res.status(201).json({ message: "User created successfully" })
-        } catch(error) {
-            return res.status(500).json({ message: "Something went wrong", error })
+            return res.status(201).json({ message: "User created successfully", data })
+        } catch (error) {
+            console.error(error)
+            return res.status(500).json({message: "Something went wrong!", error})
+        } finally {
+           await prisma?.$disconnect()    
         }
     default:
       res.setHeader('Allow', ['POST'])
