@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { UserApiRequest } from '@/types/api'
 import { hash } from 'bcryptjs'
+import prisma from "@/lib/client";
 
 type Data = {
   message: string;

@@ -1,6 +1,7 @@
 import { UserApiRequest } from '@/types/api'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
+import prisma from "@/lib/client";
 
 const selectOptions = {
   email: true,

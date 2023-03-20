@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+import prisma from "@/lib/client";
 
 export default async function getFollowInfoHandler(
   req: NextApiRequest,

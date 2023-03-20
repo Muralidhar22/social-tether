@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+import prisma from "@/lib/client";
 type Data = {
   message: string
   data?: any

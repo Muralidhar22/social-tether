@@ -1,5 +1,6 @@
 import type { NextApiResponse } from 'next'
 import { FollowApiRequest } from '@/types/api'
+import prisma from "@/lib/client";
 
 export default async function userHandler(
   req: FollowApiRequest,
