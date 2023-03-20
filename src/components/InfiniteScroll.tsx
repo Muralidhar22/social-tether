@@ -12,12 +12,11 @@ type InfiniteScrollComponentProps = {
 
 const getKeyWithUrl = (url: string, limit: number) => {
     return (pageIndex: number, previousPageData: { data: any, nextCursor: string }) => {
-        if(pageIndex > 0 && !previousPageData.nextCursor)  return null
+        if(pageIndex > 0 && typeof previousPageData?.nextCursor === "undefined")  return null
     
         const delimiter = url.includes('?') ? '&' : '?';
         if(pageIndex === 0) return `${url}${delimiter}limit=${limit}`
         
-        console.log({previousPageData, pageIndex})
         return `${url}${delimiter}limit=${limit}&cursor=${previousPageData.nextCursor}`
     }
 }
@@ -32,35 +31,42 @@ const fetcher = async (url: string) => {
 } 
 
 const InfiniteScrollComponent = ({ url, limit, keyOnData, ComponentToRender }: InfiniteScrollComponentProps) => {
-    const [intersecting, setIntersecting] = useState<boolean>()
-    const loaderRef = useRef(null)
     const { data, error, isLoading, setSize, size, mutate, isValidating } = useSWRInfinite(
-           getKeyWithUrl(url, limit),fetcher   
-    )
-    const paginatedData = data && data?.map((val) => val[keyOnData ?? ""]) //leaving the cursor and picking up each page data
-    const postsData = paginatedData && paginatedData ? [].concat(...paginatedData) : [];
-    let observer: IntersectionObserver;
-    
+        getKeyWithUrl(url, limit),fetcher   
+        )
+        const paginatedData = data && data?.map((val) => val[keyOnData ?? ""]) //leaving the cursor and picking up each page data
+        const postsData = paginatedData && paginatedData ? [].concat(...paginatedData) : [];
+        const observerRef = useRef<IntersectionObserver>()
+        const loaderRef = useRef(null)
+        const [loadNewPosts, setLoadNewPosts] = useState<boolean>()
+
     useEffect(() => {
-        observer = new IntersectionObserver(entries => {
-                const hasToLoadNewPosts = entries[0]
-                if(!hasToLoadNewPosts.isIntersecting) return
-                    console.log("SAdasdasdadsadsdasd")
-          
-            }, { rootMargin: "100px" })
-            if(loaderRef.current) {
-                observer.observe(loaderRef.current)
+        observerRef.current = new IntersectionObserver(entries => {
+                const hasToLoadNewPosts = entries[0].isIntersecting
+
+        //   check if elements is observable
+            if(hasToLoadNewPosts){
+                setLoadNewPosts(true)
+            } else {
+                setLoadNewPosts(false)
+            }
+            }, { rootMargin: "0px", root: null, threshold: 0 })
+            if(loaderRef.current && observerRef.current) {
+                observerRef.current.observe(loaderRef.current)
             }
         return () => {
-           observer.disconnect();
+          loaderRef.current && observerRef.current?.unobserve(loaderRef.current);
       };
     },[])
     
     useEffect(() => {
-        console.log("fetching")
-    },[intersecting])
-    
-    console.log({size, data, keyOnData})
+        const isUrlNull = data && getKeyWithUrl(url,limit)(size-1,data[size-1])
+        if(loadNewPosts && isUrlNull) {
+            setSize(size + 1)
+            setLoadNewPosts(false)
+        }
+    },[loadNewPosts])
+
 
     if(error) {
         return(

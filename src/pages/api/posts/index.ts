@@ -28,10 +28,10 @@ export default async function postHandler(
             ...queryOptions
           })
         const lastPostInResults = data && data[queryOptions.take - 1] 
-        const cursor = lastPostInResults?.id 
+        const nextCursor = lastPostInResults?.id 
         return res.status(200).json({message: "All posts returned successfully!", data: {
         posts: data,
-        nextCursor: cursor ?? null
+        nextCursor
           }
         })
       }  catch (error) {
@@ -77,12 +77,13 @@ export default async function postHandler(
           
           const userPosts = await prisma?.post.findMany({
             ...queryOptions
-          })        
+          })
           const lastPostInResults = userPosts && userPosts[queryOptions.take - 1] 
-          const cursor = lastPostInResults?.id 
+          const nextCursor = lastPostInResults?.id 
+
           return res.status(200).json({message: "User posts returned successfully!", data: {
             posts: userPosts,
-            nextCursor: cursor ?? null
+            nextCursor
           }})
         } catch (error) {
           console.error(error)

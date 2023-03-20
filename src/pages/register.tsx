@@ -26,7 +26,6 @@ const Register = () => {
     })
     
     async function onSubmit (values: RegisterFormValues) {
-        console.log({...values})
         try{
             const { data, status } = await tetherAxios.post("api/auth/signup", {
                 username: values.username,
