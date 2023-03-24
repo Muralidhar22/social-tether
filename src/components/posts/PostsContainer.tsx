@@ -16,25 +16,28 @@ type PostsPropsType = {
 
 const PostsContainer = ({ filter,userId }: PostsPropsType) => {    
     let url = `api/posts?q=${filter}`
-
+    let content;
     switch(filter) {
         case "all": 
-            return (
-                <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
-            )
+            content = <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
+            break;
         case "following":
-            return (
-                <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
-            )
+            content = <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
+            break;
         case "user":
           url = `${url}&userId=${userId}`
-          return (
-            <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
-        )
-        default: 
-           throw Error("") 
+          content = <InfiniteScrollComponent keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
+          break;
+        default:
+            content = <div>No content to display.</div>;
+            break;
     }
-    return null;
+    return (
+        <div className="">
+            {content}
+        </div>
+    )
+
 }
 
 export default PostsContainer;

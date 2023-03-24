@@ -11,7 +11,6 @@ import { authenticatedRoute } from '@/utils/redirection';
 import { PostsFilterType, UserType } from '@/types';
 import getLayout from '@/layout';
 import Posts from '@/components/posts/PostsContainer';
-import SideNav from '@/components/SideNav';
 import UserImage from '@/components/UserImage';
 import { getRandomUsers, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
 
@@ -37,33 +36,28 @@ const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta property="og:title" content="Tether" key="title" />
       </Head>
-      <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-5">
 
-          <div className="border-2 rounded-md border-zinc-500 p-2">
-            <h2>Users to follow</h2>      
-          {
-            isLoading 
-            ?
-            <span>loading...</span>
-            :
-            randomUsers?.data && randomUsers?.data.map((user) => (
-              <span key={user.id} className="bg-red-500 text-white font-bold m-2 flex gap-3">
-                <UserImage 
-                    imageSrc={user.image}
-                />
-                   <Link href={`/${user.username}`}>{user.username}</Link>
-              </span>
-            ) )
-          }
-          </div>
-          <h2>{sessionUser?.username ?? ""}</h2>
-              <SideNav username={sessionUser?.username ?? ""} />
-              <div className="flex justify-center">
-               <Posts filter={postsFilter} userId={sessionUser?.id} />
-          </div>
+        <div className="flex gap-5 justify-center items-start">
+          <Posts filter={postsFilter} userId={sessionUser?.id} />
+
+            <div className="border-2 rounded-md border-zinc-500 hidden lg:block p-2 w-80">
+              <h2>Users to follow</h2>   
+              {
+                isLoading 
+                ?
+                <span>loading...</span>
+                :
+                randomUsers?.data && randomUsers?.data.map((user) => (
+                  <span key={user.id} className="bg-red-500 text-white font-bold m-2 flex gap-3">
+                    <UserImage 
+                        imageSrc={user.image}
+                    />
+                      <Link href={`/${user.username}`}>{user.username}</Link>
+                  </span>
+                ) )
+              }
+            </div>
         </div>
-      </div>
     </>
   )
 }

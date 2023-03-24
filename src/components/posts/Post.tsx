@@ -25,13 +25,14 @@ const Post = ({ data, mutateData, page, index }: PostContainerPropsType) => {
     }
     
     return(
-    <div className="border-2 w-72 p-2 border-zinc-500" >
-        <div className="flex gap-2 items-center">
+    <div className="w-full flex gap-3 items-start mb-5" >
+        {/* user profile image */}
+        <div className="sticky top-10">
             <UserImage imageSrc={postData?.author?.image}  />
-            <h3>{postData?.author?.username}</h3>
         </div>
-        <div className="w-full h-44">
-            {postData?.content && postData.content}
+        {/* post content */}
+        <div className="w-full border-2 border-zinc-500">
+        <h3>{postData?.author?.username}</h3>
             {postData?.image
                 &&
                 <Image
@@ -42,12 +43,13 @@ const Post = ({ data, mutateData, page, index }: PostContainerPropsType) => {
                     height={100}
                 />
             }
-        </div>
+            {postData?.content && postData.content}
         <div className="flex justify-between">
             <div> 
                 <FaRegHeart />
                 <FaHeart />
             </div>
+        </div>
         </div>
     </div>
         

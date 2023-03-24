@@ -11,7 +11,17 @@ export default async function postHandler(
   // const userId = query.id as string
   const { content, authorId, image } = req.body
   const queryOptions: any = {
-    take: parseInt(limit)
+    take: parseInt(limit),
+    select: {
+      author: true,
+      authorId: true,
+      id: true,
+      image: true,
+      likes: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true
+    }
   };
   switch (method) {
     case 'GET':
@@ -44,7 +54,7 @@ export default async function postHandler(
         const followingData = await prisma?.userFollow.findMany({
           where: { 
             followerId: userId
-          }
+          },
         })
         // adding query options
         queryOptions.where = {
@@ -54,7 +64,8 @@ export default async function postHandler(
         }
         try {
             const data = await prisma?.post.findMany({
-              ...queryOptions
+              ...queryOptions,
+
             })
             const lastPostInResults = data && data[queryOptions.take - 1] 
             const nextCursor = lastPostInResults?.id 

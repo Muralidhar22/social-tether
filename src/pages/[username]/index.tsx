@@ -18,7 +18,7 @@ const ProfilePage =  ({ sessionUser }: InferGetServerSidePropsType<typeof getSer
   const visitedUserCacheKey = `${userUsernameEndpoint}/${usernameFromRoute}`
   const sessionUserCacheKey = `${userIdEndpoint}/${sessionUser.id}`
   const { data: visitedUserData, mutate: visitedUserMutate, isLoading, error } = useSWR(visitedUserCacheKey,() => getUserByUsername(usernameFromRoute as string));
-  const [sessionUserData, mutateSessionUser ] = useSWRSessionState(sessionUserCacheKey, () => getUserById(sessionUser.id))
+  const [{data: sessionUserData}, mutateSessionUser ] = useSWRSessionState(sessionUserCacheKey, () => getUserById(sessionUser.id))
   const isSessionUserProfile = sessionUserData?.username === usernameFromRoute
 
   return(

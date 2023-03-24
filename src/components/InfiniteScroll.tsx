@@ -40,10 +40,18 @@ const InfiniteScrollComponent = ({ url, limit, keyOnData, ComponentToRender }: I
         const loaderRef = useRef(null)
         const [loadNewPosts, setLoadNewPosts] = useState<boolean>()
 
+        useEffect(() => {
+            if(!isLoading && !isValidating && loadNewPosts) {
+                const isUrlNull = data && getKeyWithUrl(url,limit)(size-1,data[size-1])
+                if(isUrlNull) {
+                    setSize(size + 1)
+                } 
+            }
+        },[isLoading, isValidating, loadNewPosts, size, setSize, data])
+        
     useEffect(() => {
         observerRef.current = new IntersectionObserver(entries => {
                 const hasToLoadNewPosts = entries[0].isIntersecting
-
         //   check if elements is observable
             if(hasToLoadNewPosts){
                 setLoadNewPosts(true)
@@ -55,18 +63,9 @@ const InfiniteScrollComponent = ({ url, limit, keyOnData, ComponentToRender }: I
                 observerRef.current.observe(loaderRef.current)
             }
         return () => {
-          loaderRef.current && observerRef.current?.unobserve(loaderRef.current);
+          loaderRef.current && observerRef.current?.disconnect();
       };
     },[])
-    
-    useEffect(() => {
-        const isUrlNull = data && getKeyWithUrl(url,limit)(size-1,data[size-1])
-        if(loadNewPosts && isUrlNull) {
-            setSize(size + 1)
-            setLoadNewPosts(false)
-        }
-    },[loadNewPosts])
-
 
     if(error) {
         return(
@@ -83,9 +82,8 @@ const InfiniteScrollComponent = ({ url, limit, keyOnData, ComponentToRender }: I
                 ))
             }
 
-            {isLoading && <div>loading...</div>}
+            {(isLoading || isValidating) && <div>loading...</div>}
             <div className="sr-only" ref={loaderRef}>load more</div>
-            <button onClick={() => setSize(size + 1)}>Load more</button>
         </div>
     )
 }

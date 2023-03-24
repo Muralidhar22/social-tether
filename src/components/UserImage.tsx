@@ -10,6 +10,9 @@ type UserImageProps = {
 }
 
 const UserImage = ({ imageSrc, width = 32, height = 32 }: UserImageProps) => {
+    
+    console.log({imageSrc})
+    
     return(
         <>
             <span className="block rounded-full grid place-content-center overflow-hidden">            
