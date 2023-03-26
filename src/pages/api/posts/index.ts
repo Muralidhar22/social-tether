@@ -13,7 +13,13 @@ export default async function postHandler(
   const queryOptions: any = {
     take: parseInt(limit),
     select: {
-      author: true,
+      author:  {
+        select: {
+          name: true,
+          image: true,
+          id: true,
+        }
+      },
       authorId: true,
       id: true,
       image: true,
@@ -65,7 +71,6 @@ export default async function postHandler(
         try {
             const data = await prisma?.post.findMany({
               ...queryOptions,
-
             })
             const lastPostInResults = data && data[queryOptions.take - 1] 
             const nextCursor = lastPostInResults?.id 

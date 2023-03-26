@@ -1,5 +1,7 @@
+import { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
 
 import { FaRegUserCircle } from "react-icons/fa";
 
@@ -9,13 +11,13 @@ type UserImageProps = {
     height?: number;
 }
 
-const UserImage = ({ imageSrc, width = 32, height = 32 }: UserImageProps) => {
+const UserImage = memo(function UserImage({ imageSrc, width = 32, height = 32 }: UserImageProps) {
     
     console.log({imageSrc})
     
     return(
         <>
-            <span className="block rounded-full grid place-content-center overflow-hidden">            
+            <span className="block rounded-full grid place-content-center overflow-hidden w-8 h-8">            
                     {
                         imageSrc ?
                         <Image 
@@ -30,6 +32,6 @@ const UserImage = ({ imageSrc, width = 32, height = 32 }: UserImageProps) => {
             </span>
         </>
     )
-}
+})
 
 export default UserImage;

@@ -1,29 +1,25 @@
 import { signOut } from "next-auth/react"
 import { useState } from "react"
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
+import { updateUsername } from "@/lib/api/userApi";
 import { authenticatedRoute } from '@/utils/redirection';
+import { toastError } from "@/lib/toastMessage";
 
-export const getServerSideProps: GetServerSideProps = authenticatedRoute
+export const getServerSideProps = authenticatedRoute
 
-const NewUser = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const NewUser = () => {
     const [username, setUsername] = useState<string | null>(null)
     
     const onSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault()
-        const email = sessionUser.email
-
-        const res = await fetch(`http://localhost:3000/api/user/email/${email}`, { 
-            method: "PUT",
-            body: JSON.stringify({
-                username,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        const result = await res.json()
-
+        if(username) {
+            try {
+                const result = await updateUsername(username)
+                
+            } catch (error) {
+                // toastError("")
+            }
+        }
     }
     
     return (<>

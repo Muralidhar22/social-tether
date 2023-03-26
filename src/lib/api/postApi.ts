@@ -3,6 +3,7 @@ import tetherAxios from "./axiosInstance"
 
 export const postsEndpoint = "/api/posts"
 export const postsCountEndpoint = "/api/posts/count"
+export const postIdEndpoint = "/api/posts/id"
 
 export const getPostsCount = async (userId: string | undefined) => {
    if(userId) {
@@ -11,6 +12,13 @@ export const getPostsCount = async (userId: string | undefined) => {
       })
       return countResponse.data
    }
+}
+
+export const getPostById = async (postId: string) => {
+   const { data: postResponse } = await tetherAxios.get(postIdEndpoint, {
+      params: { postId }
+   })
+   return postResponse.data
 }
 
 export const getPosts = async (filter: PostsFilterType, userId: string, cursor?: string) => {

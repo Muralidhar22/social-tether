@@ -2,8 +2,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image';
 import { useState, useEffect } from "react";
-import { GetServerSideProps } from 'next';
-import { InferGetServerSidePropsType } from 'next';
 import useSWR from "swr";
 import { useRouter } from 'next/router';
 
@@ -12,13 +10,17 @@ import { PostsFilterType, UserType } from '@/types';
 import getLayout from '@/layout';
 import Posts from '@/components/posts/PostsContainer';
 import UserImage from '@/components/UserImage';
-import { getRandomUsers, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
+import { getRandomUsers, getUserById, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
+import useSWRSessionState from '@/hooks/useSWRSessionState';
+import { SessionUserContextType, useSessionUser } from '@/context/SessionUser';
 
 export const getServerSideProps = authenticatedRoute
 
-const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home = () => {
   const [postsFilter, setPostsFilter] = useState<PostsFilterType>("following")
-  const { isLoading, data: randomUsers, error } = useSWR(cacheKey,() => getRandomUsers(sessionUser?.username))
+  const { sessionCacheKey, sessionUserId } = useSessionUser() as SessionUserContextType
+  const [ { data: sessionUserData },  ] = useSWRSessionState(sessionCacheKey,() => getUserById(sessionUserId))
+  const { isLoading, data: randomUsers, error } = useSWR(() => `${cacheKey}?username=` + sessionUserData.username,() => getRandomUsers(sessionUserData?.username))
   const router = useRouter()
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const Home = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
       </Head>
 
         <div className="flex gap-5 justify-center items-start">
-          <Posts filter={postsFilter} userId={sessionUser?.id} />
+          {sessionUserId && <Posts filter={postsFilter} userId={sessionUserId} />}
 
             <div className="border-2 rounded-md border-zinc-500 hidden lg:block p-2 w-80">
               <h2>Users to follow</h2>   

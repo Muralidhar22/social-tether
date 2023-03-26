@@ -47,6 +47,6 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     }
 
     return {
-      props: { sessionUser: userInfoResponse.data }
+      props: { sessionUserId: userInfoResponse.data.id }
     } 
 }

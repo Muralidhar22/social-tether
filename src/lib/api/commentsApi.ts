@@ -3,9 +3,16 @@ import { Fetcher } from "swr"
 
 import tetherAxios from "./axiosInstance"
 
-export const commentsUrlEndpoint = "/api/comments"
+export const commentsOfPostEndpoint = "/api/comments/post"
 
-export const getComments = async () => {
+export const getPostComments = async (postId: string) => {
+    const { data: commentsResponse } = await tetherAxios.get(commentsOfPostEndpoint, {
+        params: { postId }
+    })
+    return commentsResponse.data
+}
+
+export const updateComment = async () => {
     
 }
 

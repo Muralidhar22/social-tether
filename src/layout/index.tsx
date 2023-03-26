@@ -10,18 +10,14 @@ import { UserType } from '@/types';
 import UserImage from '@/components/UserImage';
 import useSWRSessionState from '@/hooks/useSWRSessionState';
 import NavMenu from '@/components/NavMenu';
+import { useSessionUser, SessionUserContextType } from "@/context/SessionUser";
 
 import { FaCompass, FaBookmark, FaUser, FaSearch } from "react-icons/fa";
 
-type Props = {
-    children: React.ReactNode
-    sessionUserId: string
-}
 
-const Layout = ({ children, sessionUserId }: Props) => {
-    const cacheKey = `${userIdEndpoint}/${sessionUserId}`
-    const [ { data: sessionUserData }, mutateSessionUser ] = useSWRSessionState(cacheKey,() => getUserById(sessionUserId))
-    // const { data: userResponse } = useSWR(cacheKey,() => getUser(data?.user?.email ?? ""))
+const Layout = ({ children }: { children: React.ReactNode }) => {
+    const { sessionUserId, sessionCacheKey } = useSessionUser() as SessionUserContextType
+    const [ { data: sessionUserData }, mutateSessionUser ] = useSWRSessionState(sessionCacheKey,() => getUserById(sessionUserId))
 
     return (
         <div className="p-5">
@@ -65,9 +61,9 @@ const Layout = ({ children, sessionUserId }: Props) => {
     )
 }
 
-const getLayout = (page: ReactElement<any, string | JSXElementConstructor<any>>, sessionUserId: string) => {
+const getLayout = (page: ReactElement<any, string | JSXElementConstructor<any>>) => {
     return (
-      <Layout sessionUserId={sessionUserId}>
+      <Layout>
         {page}
       </Layout>
     )

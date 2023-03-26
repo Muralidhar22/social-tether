@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
-import { InferGetServerSidePropsType } from 'next'
 import useSWR from "swr";
 
 import { authenticatedRoute } from '@/utils/redirection';
 import getLayout from '@/layout';
 import { getUserByUsername,getUserById, userIdEndpoint, userUsernameEndpoint } from '@/lib/api/userApi';
+import { useSessionUser, SessionUserContextType } from '@/context/SessionUser';
 
 import Profile from '@/components/Profile';
 
@@ -12,13 +12,13 @@ import useSWRSessionState from '@/hooks/useSWRSessionState';
 
 export const getServerSideProps = authenticatedRoute
 
-const ProfilePage =  ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ProfilePage =  () => {
   const router = useRouter()
   const { username: usernameFromRoute } = router.query
   const visitedUserCacheKey = `${userUsernameEndpoint}/${usernameFromRoute}`
-  const sessionUserCacheKey = `${userIdEndpoint}/${sessionUser.id}`
+  const { sessionCacheKey, sessionUserId } = useSessionUser() as SessionUserContextType
   const { data: visitedUserData, mutate: visitedUserMutate, isLoading, error } = useSWR(visitedUserCacheKey,() => getUserByUsername(usernameFromRoute as string));
-  const [{data: sessionUserData}, mutateSessionUser ] = useSWRSessionState(sessionUserCacheKey, () => getUserById(sessionUser.id))
+  const [{data: sessionUserData}, mutateSessionUser ] = useSWRSessionState(sessionCacheKey, () => getUserById(sessionUserId))
   const isSessionUserProfile = sessionUserData?.username === usernameFromRoute
 
   return(
