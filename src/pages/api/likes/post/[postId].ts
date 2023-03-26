@@ -9,15 +9,28 @@ export default async function userIdHandler(
   const { query, method, body } = req
   const postId = query.postId as string
   const q = query.q as string
-  
+  const userId = query.userId as string
   switch (method) {
     case 'GET':
       if(q === "count") {
           try {
-          const data = await prisma?.comment.count({
+          const data = await prisma?.like.count({
               where: { postId },
             })
-            return res.status(200).json({ message: "Count returned successfully!", data: { count: data }})
+            return res.status(200).json({ message: "User returned successfully!", data: { count: data }})
+            
+          } catch (error) {
+            console.error(error)
+            return res.status(500).json({message: "Something went wrong!", error})
+          } finally {
+            await prisma?.$disconnect()    
+          }
+      } else if (q === "user") {
+        try {
+          const data = await prisma?.like.findFirst({
+              where: { postId, userId },
+            })
+            return res.status(200).json({ message: "User returned successfully!", data: { hasLikedPost: !!data }})
             
           } catch (error) {
             console.error(error)
@@ -26,18 +39,7 @@ export default async function userIdHandler(
             await prisma?.$disconnect()    
           }
       }
-        try {
-          const data = await prisma?.comment.findMany({
-              where: { postId },
-            })
-            return res.status(200).json({ message: "Comments returned successfully!", data})
-            
-          } catch (error) {
-            console.error(error)
-            return res.status(500).json({message: "Something went wrong!", error})
-          } finally {
-            await prisma?.$disconnect()    
-          }
+      return res.status(400).json({ message: "q param is missing" })
     default:
       res.setHeader('Allow', ['GET'])
       return res.status(405).end(`Method ${method} Not Allowed`)

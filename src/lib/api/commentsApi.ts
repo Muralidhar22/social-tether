@@ -1,12 +1,14 @@
-import axios from "axios"
-import { Fetcher } from "swr"
-
 import tetherAxios from "./axiosInstance"
 
-export const commentsOfPostEndpoint = "/api/comments/post"
+export const commentsPostEndpoint = "api/comments/post"
+
+export const getCommentsCount = async (postId: string) => {
+    const { data: response  } = await tetherAxios.get(`${commentsPostEndpoint}/${postId}?q=count`)
+    return response.data.count
+}
 
 export const getPostComments = async (postId: string) => {
-    const { data: commentsResponse } = await tetherAxios.get(commentsOfPostEndpoint, {
+    const { data: commentsResponse } = await tetherAxios.get(commentsPostEndpoint, {
         params: { postId }
     })
     return commentsResponse.data
