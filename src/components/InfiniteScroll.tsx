@@ -3,8 +3,8 @@ import useSWRInfinite from 'swr/infinite';
 import tetherAxios from "@/lib/api/axiosInstance";
 
 
-type InfiniteScrollComponentProps = {
-    ComponentToRender: React.FC<{ data: any, mutateData: any, page: number, index: number }>
+type InfiniteScrollComponentProps<T> = {
+    ComponentToRender: React.FC<{ data: T, mutateData?: any, page?: number, index?: number }>
     limit: number;
     url: string;
     keyOnData: "posts";
@@ -31,7 +31,7 @@ const fetcher = async (url: string) => {
     }
 } 
 
-const InfiniteScrollComponent = ({ url, limit, keyOnData, ComponentToRender, emptyDataMessage }: InfiniteScrollComponentProps) => {
+const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender, emptyDataMessage }: InfiniteScrollComponentProps<T>) => {
     const { data, error, isLoading, setSize, size, mutate, isValidating } = useSWRInfinite(
         getKeyWithUrl(url, limit),fetcher   
         )

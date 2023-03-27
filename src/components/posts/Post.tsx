@@ -1,47 +1,41 @@
 import Image from "next/image"
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import useSWR from "swr";
 import Link from "next/link";
 
 import UserImage from "@/components/UserImage"
 import { PostType, UserType } from "@/types"
 import { useSessionUser, SessionUserContextType } from "@/context/SessionUser";
-import { getLikesCount, getHasUserLikedPost, likesPostEndpoint } from "@/lib/api/likesApi";
-import { getCommentsCount, commentsPostEndpoint } from "@/lib/api/commentsApi";
+
+
 import { getHasUserBookmarked, bookmarkEndpoint } from "@/lib/api/bookmarkApi";
 
-import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { MdOutlineModeComment } from "react-icons/md";
+
+
 import useSWRState from "@/hooks/useSWRState";
+import CommentSection from "./CommentSection";
+import LikeComponent from "./LikeIcon";
+import CommentComponent from "./CommentIcon";
 
 
 type PostContainerPropsType = {
     data: PostType;
-    mutateData: () => Promise<any>;
-    page: number;
-    index: number;
+    enableCommentSection?: boolean
 }
 
-const InfiniteScrollPost = memo(function Post ({ data, mutateData, page, index }: PostContainerPropsType) {
+const Post =  ({ data, enableCommentSection }: PostContainerPropsType) => {
     const postData = data
     const { sessionUserId } = useSessionUser() as SessionUserContextType
     // const { data: userData } = useSWR(userCacheKey + data?.user?.email,getUser(data?.user?.email ?? ""))
-    const [{ data: likesCount }] = useSWRState<number>(`${likesPostEndpoint}/${postData.id}?q=count`,() => getLikesCount(postData.id))
-    const [{ data: hasUserLiked }] = useSWRState<boolean>(`${likesPostEndpoint}/${postData.id}?q=user`,() => getHasUserLikedPost(postData.id,sessionUserId))
-    const [{ data: commentsCount }] = useSWRState<number>(`${commentsPostEndpoint}/${postData.id}?q=count`,() => getCommentsCount(postData.id))
-    const [{data: hasPostBookmarked }] = useSWRState<boolean>(`${bookmarkEndpoint}?q=post&postId=${postData.id}&userId=${sessionUserId}`,() => getHasUserBookmarked(postData.id, sessionUserId))
-    console.log({page, index})
 
-    const onClickComment = () => {
-        
-    }
-    
-    const onLikeClickHandler = () => {
-        
-    }
+
+    const [{data: hasPostBookmarked }] = useSWRState<boolean>(`${bookmarkEndpoint}?q=post&postId=${postData.id}&userId=${sessionUserId}`,() => getHasUserBookmarked(postData.id, sessionUserId))
+    console.count(data.id)
+
+
     
     return(
-
+<>
     <div className="w-full flex gap-3 items-start mb-5" >
         {/* user profile image */}
         <div className="sticky top-10">
@@ -65,24 +59,19 @@ const InfiniteScrollPost = memo(function Post ({ data, mutateData, page, index }
             }
             {postData?.content && postData.content}
         <div className="flex justify-evenly items-center">
-            <span className="flex gap-1 items-center">
-                <span onClick={onLikeClickHandler}>
-                    {!hasUserLiked && <FaRegHeart className="cursor-pointer"/>}
-                    {hasUserLiked && <FaHeart color="red" className="cursor-pointer" />}
-                </span> 
-                {likesCount}
-            </span>
-            <span className="flex items-center gap-1">
-                <Link href={`/post/${data.id}`} >
-                    <MdOutlineModeComment />
-                </Link> 
-                <span>{commentsCount}</span>
-            </span>
+            <LikeComponent postId={postData.id} />
+            <CommentComponent postId={postData.id} />
         </div>
         </div>
     </div>
+    {/* comments section */}
+    {
+        enableCommentSection &&
+            <CommentSection postId={postData.id}/>
+    }
+</>
 
     )
-})
+}
 
-export default InfiniteScrollPost;
+export default memo(Post);

@@ -1,30 +1,35 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/client";
 
-type Data = {
-  message: string
-  data?: any
-}
-
-export default function postHandler(
+export default async function postByIdHandler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   const { query, method } = req
-  const id = query.id
-  const name = query.name as string
+  const id = query.id as string
+
+  console.log({id})
 
   switch (method) {
     case 'GET':
-      
-      res.status(200).json({ message: "Deleted post successfully!" })
-      break
+      try {
+        const data = await prisma?.post.findFirst({
+            where: { 
+                id
+            }
+        })
+        return res.status(200).json({ message: "Posts returned successfully!", data: data })
+      }  catch (error) {
+        console.error(error)
+        return res.status(500).json({message: "Something went wrong!", error})
+    } finally {
+       await prisma?.$disconnect()    
+    }
     case 'PUT':
       
-      res.json({ message: "Updated post successfully!" })
-      break
+      return res.json({ message: "Updated post successfully!" })
     default:
       res.setHeader('Allow', ['DELETE', 'PUT'])
-      res.status(405).end(`Method ${method} Not Allowed`)
+      return res.status(405).end(`Method ${method} Not Allowed`)
   }
 }

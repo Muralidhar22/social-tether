@@ -7,7 +7,7 @@ import { PostsFilterType, PostType, UserType } from "@/types";
 import Image from "next/image";
 import UserImage from "../UserImage";
 import { userEmailEndpoint as userCacheKey } from "@/lib/api/userApi";
-import InfiniteScrollPost from "./InfiniteScrollPost";
+import Post from "./Post";
 
 type PostsPropsType = {
     filter: PostsFilterType
@@ -20,15 +20,15 @@ const PostsContainer = ({ filter,userId }: PostsPropsType) => {
     let content;
     switch(filter) {
         case "all": 
-            content = <InfiniteScrollComponent emptyDataMessage="This is awkward" keyOnData="posts" limit={2} url={url} ComponentToRender={InfiniteScrollPost} />
+            content = <InfiniteScrollComponent<PostType> emptyDataMessage="This is awkward" keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
             break;
         case "following":
             url = `${url}&userId=${userId}`
-            content = <InfiniteScrollComponent emptyDataMessage="Follow users to know what's happening!?" keyOnData="posts" limit={2} url={url} ComponentToRender={InfiniteScrollPost} />
+            content = <InfiniteScrollComponent emptyDataMessage="Follow users to know what's happening!?" keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
             break;
         case "user":
           url = `${url}&userId=${userId}`
-          content = <InfiniteScrollComponent emptyDataMessage="Post something" keyOnData="posts" limit={2} url={url} ComponentToRender={InfiniteScrollPost} />
+          content = <InfiniteScrollComponent emptyDataMessage="Post something" keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
           break;
         default:
             content = <div>No content to display.</div>;

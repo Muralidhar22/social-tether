@@ -8,9 +8,7 @@ export const getCommentsCount = async (postId: string) => {
 }
 
 export const getPostComments = async (postId: string) => {
-    const { data: commentsResponse } = await tetherAxios.get(commentsPostEndpoint, {
-        params: { postId }
-    })
+    const { data: commentsResponse } = await tetherAxios.get(`${commentsPostEndpoint}/${postId}`)
     return commentsResponse.data
 }
 
