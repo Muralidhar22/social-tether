@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import useSWRInfinite from 'swr/infinite';
 import tetherAxios from "@/lib/api/axiosInstance";
 
@@ -33,13 +33,21 @@ const fetcher = async (url: string) => {
 
 const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender, emptyDataMessage }: InfiniteScrollComponentProps<T>) => {
     const { data, error, isLoading, setSize, size, mutate, isValidating } = useSWRInfinite(
-        getKeyWithUrl(url, limit),fetcher   
+        getKeyWithUrl(url, limit),fetcher, {
+            revalidateOnFocus: false,
+        }   
         )
         const paginatedData = data && data?.map((val) => val[keyOnData ?? ""]) //leaving the cursor and picking up each page data
         const mappedData = paginatedData && paginatedData ? [].concat(...paginatedData) : [];
-        const observerRef = useRef<IntersectionObserver>()
-        const loaderRef = useRef(null)
+        const loaderRef = useRef<HTMLDivElement>(null)
         const [loadNewPosts, setLoadNewPosts] = useState<boolean>()
+        
+        const handleClick = () => {
+            const isUrlNull = data && getKeyWithUrl(url,limit)(size-1,data[size-1])
+                if(isUrlNull) {
+                    setSize(size + 1)
+                } 
+        }
         
         useEffect(() => {
             if(!isLoading && !isValidating && loadNewPosts) {
@@ -48,26 +56,22 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
                     setSize(size + 1)
                 } 
             }
-        },[isLoading, isValidating, loadNewPosts, size, setSize, data])
+        },[isLoading, isValidating, loadNewPosts])
     
     useEffect(() => {
-        observerRef.current = new IntersectionObserver(entries => {
-                const hasToLoadNewPosts = entries[0].isIntersecting
+        if (!loaderRef.current) return
+        const observer = new IntersectionObserver(entries => {
+        const hasToLoadNewPosts = entries[0].isIntersecting
         //   check if elements is observable
-        if(hasToLoadNewPosts){
-            setLoadNewPosts(true)
-        } else {
-            setLoadNewPosts(false)
-        }
-    }, { rootMargin: "0px", root: null, threshold: 0 })
-    if(loaderRef.current && observerRef.current) {
-                observerRef.current.observe(loaderRef.current)
-            }
+        setLoadNewPosts(hasToLoadNewPosts)
+    })
+    
+        observer.observe(loaderRef.current)
         return () => {
-            observerRef.current?.disconnect()
+            loaderRef.current && observer.unobserve(loaderRef?.current)
       };
-    },[observerRef.current, loaderRef.current])
-
+    })
+    
     if(error) {
         return(
             <>
@@ -85,15 +89,17 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
     }
     
     return (
+
         <div>
             {
                 mappedData.map((data: any, idx) => (
-                    <ComponentToRender key={data.id} data={data} mutateData={mutate} index={idx} page={Math.floor(idx/limit)} />
+                    <ComponentToRender key={data.id} data={data} />
                 ))
             }
 
             {(isLoading || isValidating) && <div>loading...</div>}
             <div className="sr-only" ref={loaderRef}>load more</div>
+            {/* <button onClick={handleClick}>more</button> */}
         </div>
     )
 }

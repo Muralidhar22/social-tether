@@ -8,7 +8,6 @@ import { useSessionUser, SessionUserContextType } from '@/context/SessionUser';
 
 import Profile from '@/components/Profile';
 
-import useSWRState from '@/hooks/useSWRState';
 import { UserType } from '@/types';
 
 export const getServerSideProps = authenticatedRoute
@@ -19,7 +18,7 @@ const ProfilePage =  () => {
   const visitedUserCacheKey = `${userUsernameEndpoint}/${usernameFromRoute}`
   const { sessionCacheKey, sessionUserId } = useSessionUser() as SessionUserContextType
   const { data: visitedUserData, mutate: visitedUserMutate, isLoading, error } = useSWR(visitedUserCacheKey,() => getUserByUsername(usernameFromRoute as string));
-  const [{data: sessionUserData}, mutateSessionUser ] = useSWRState<UserType>(sessionCacheKey, () => getUserById(sessionUserId))
+  const {data: sessionUserData, mutate: mutateSessionUser } = useSWR(sessionCacheKey, () => getUserById(sessionUserId))
   const isSessionUserProfile = sessionUserData?.username === usernameFromRoute
 
   return(
@@ -48,7 +47,7 @@ const ProfilePage =  () => {
           userData={visitedUserData}
           userMutate={visitedUserMutate}
           isSessionUserProfile={isSessionUserProfile}
-          sessionUserId={sessionUserData?.id}
+          sessionUserId={sessionUserId}
         />
       )
     }

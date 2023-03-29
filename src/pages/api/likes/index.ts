@@ -6,7 +6,7 @@ export default async function userIdHandler(
   res: NextApiResponse
 ) {
   const { query, method, body } = req
-  const likeId = query.id as string
+  const likeId = query.likeId as string
   
   switch (method) {
       case 'POST':

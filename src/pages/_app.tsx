@@ -21,12 +21,10 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 }
 
-export const getServerSideProps = authenticatedRoute
-
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
   const sessionUserId = pageProps.sessionUserId
-  
+
   return (
     <>
       <Script 
@@ -46,7 +44,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           `
          }}
       />
-    
      <div className={`${inter.variable} font-sans min-h-screen`}>
       <Toaster />
           <SessionUserProvider sid={sessionUserId ?? ""} >

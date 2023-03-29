@@ -8,16 +8,15 @@ import DarkModeToggle from '@/components/DarkModeToggle';
 import { getUserById, userIdEndpoint } from '@/lib/api/userApi';
 import { UserType } from '@/types';
 import UserImage from '@/components/UserImage';
-import useSWRState from '@/hooks/useSWRState';
 import NavMenu from '@/components/NavMenu';
 import { useSessionUser, SessionUserContextType } from "@/context/SessionUser";
 
 import { FaCompass, FaBookmark, FaUser, FaSearch } from "react-icons/fa";
-
+import { IoSettingsSharp } from "react-icons/io5";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const { sessionUserId, sessionCacheKey } = useSessionUser() as SessionUserContextType
-    const [ { data: sessionUserData }, mutateSessionUser ] = useSWRState<UserType>(sessionCacheKey,() => getUserById(sessionUserId))
+    const { data: sessionUserData ,mutate: mutateSessionUser } = useSWR(sessionCacheKey,() => getUserById(sessionUserId))
 
     return (
         <div className="p-5">
@@ -50,6 +49,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <span className="lg:hidden">
             Explore
             </span>
+        </Link>
+        <Link href="/settings">
+        <IoSettingsSharp />
         </Link>
                 <DarkModeToggle />
                 <Link href="/new/post">New post</Link>

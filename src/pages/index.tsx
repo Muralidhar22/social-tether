@@ -11,18 +11,18 @@ import getLayout from '@/layout';
 import Posts from '@/components/posts/PostsContainer';
 import UserImage from '@/components/UserImage';
 import { getRandomUsers, getUserById, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
-import useSWRState from '@/hooks/useSWRState';
 import { SessionUserContextType, useSessionUser } from '@/context/SessionUser';
+import useSWRState from '@/hooks/useSWRState';
 
 export const getServerSideProps = authenticatedRoute
 
 const Home = () => {
   const [postsFilter, setPostsFilter] = useState<PostsFilterType>("following")
   const { sessionCacheKey, sessionUserId } = useSessionUser() as SessionUserContextType
-  const [ { data: sessionUserData },  ] = useSWRState<UserType>(sessionCacheKey,() => getUserById(sessionUserId))
-  const { isLoading, data: randomUsers, error } = useSWR(() => `${cacheKey}?username=` + sessionUserData.username,() => getRandomUsers(sessionUserData?.username))
+  const { data: sessionUserData } = useSWR(sessionCacheKey,() => getUserById(sessionUserId))
+  const { isLoading, data: randomUsers, error } = useSWR(() => `${cacheKey}?username=` + sessionUserData?.username,() => getRandomUsers(sessionUserData?.username))
   const router = useRouter()
-
+  
   useEffect(() => {
     const { query } = router
     if(query.feed === "explore") {

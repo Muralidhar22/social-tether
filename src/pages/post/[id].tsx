@@ -5,25 +5,26 @@ import { postIdEndpoint, getPostById } from "@/lib/api/postApi";
 import { commentsPostEndpoint, getPostComments } from "@/lib/api/commentsApi";
 import Post from "@/components/posts/Post";
 import getLayout from '@/layout';
+import { useSessionUser, SessionUserContextType } from "@/context/SessionUser";
+import { authenticatedRoute } from "@/utils/redirection";
+
+export const getServerSideProps = authenticatedRoute
 
 const PostPage = () => {
+    const { sessionUserId } = useSessionUser() as SessionUserContextType
     const router = useRouter()
     const postId = router.query.id as string
-    const { data } = useSWR(`${postIdEndpoint}/${postId}`,() => {
+    const { data: postData } = useSWR(`${postIdEndpoint}/${postId}`,() => {
         if(postId) return getPostById(postId)
         return null
     })
-    const { data: comments } = useSWR(`${commentsPostEndpoint}/${postId}`,() => {
-        if(postId) return getPostComments(postId)
-        return null
-    })
-    console.log({postId, comments})
+    
     return(
         <>
-            {data &&
+            {postData &&
             <>
-            
-            <Post data={data} enableCommentSection={true} />
+            {sessionUserId === postData.authorId && <button>Edit post</button>}
+            <Post data={postData} enableCommentSection={true} />
 
             </>
             }

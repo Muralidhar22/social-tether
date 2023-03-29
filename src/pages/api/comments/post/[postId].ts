@@ -10,6 +10,7 @@ export default async function userIdHandler(
   const postId = query.postId as string
   const q = query.q as string
   
+  
   switch (method) {
     case 'GET':
       if(q === "count") {
@@ -29,6 +30,19 @@ export default async function userIdHandler(
         try {
           const data = await prisma?.comment.findMany({
               where: { postId },
+              select: {
+                content: true,
+                id: true,
+                user: {
+                  select: {
+                    id: true,
+                    image: true,
+                    username: true,
+                  }
+                },
+                postId: true,
+                createdAt: true
+              }
             })
             return res.status(200).json({ message: "Comments returned successfully!", data})
             

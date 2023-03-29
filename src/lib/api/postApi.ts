@@ -14,11 +14,8 @@ export const getPostsCount = async (userId: string | undefined) => {
    }
 }
 
-export const getPostById = async (postId: string) => {
-   console.log({postId})
-   const { data: postResponse } = await tetherAxios.get(`${postIdEndpoint}/${postId}`, {
-      params: { postId }
-   })
+export const getPostById = async (postId: string): Promise<PostType> => {
+   const { data: postResponse } = await tetherAxios.get(`${postIdEndpoint}/${postId}`)
    return postResponse.data
 }
 

@@ -20,7 +20,9 @@ export type PostType = {
 export type CommentType = {
     id: string;
     content: string;
-    userId: string;
+    user: UserType;
+    postId: string;
+    createdAt: string;
 }
 
 export type LikesType = {

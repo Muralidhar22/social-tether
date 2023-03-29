@@ -7,7 +7,25 @@ export default async function postByIdHandler(
 ) {
   const { query, method } = req
   const id = query.id as string
-
+  const queryOptions: any = {
+    select: {
+      author:  {
+        select: {
+          name: true,
+          image: true,
+          id: true,
+          username: true,
+        }
+      },
+      authorId: true,
+      id: true,
+      image: true,
+      likes: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true
+    }
+  };
   console.log({id})
 
   switch (method) {
@@ -16,7 +34,8 @@ export default async function postByIdHandler(
         const data = await prisma?.post.findFirst({
             where: { 
                 id
-            }
+            },
+            ...queryOptions
         })
         return res.status(200).json({ message: "Posts returned successfully!", data: data })
       }  catch (error) {

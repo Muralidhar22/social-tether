@@ -18,6 +18,7 @@ export default async function postHandler(
           name: true,
           image: true,
           id: true,
+          username: true,
         }
       },
       authorId: true,

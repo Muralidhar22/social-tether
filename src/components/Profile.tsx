@@ -59,7 +59,7 @@ const removeFollowClickHandler = async () => {
       mutateUserFollowCount()
     }
   }
-console.log({isSessionUserProfile})
+
     return (
         <>
         <h1>Profile Page</h1>

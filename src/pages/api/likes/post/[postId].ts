@@ -30,7 +30,7 @@ export default async function userIdHandler(
           const data = await prisma?.like.findFirst({
               where: { postId, userId },
             })
-            return res.status(200).json({ message: "User returned successfully!", data: { hasLikedPost: !!data }})
+            return res.status(200).json({ message: "User returned successfully!", data: { id: data?.id ?? "", value: !!data }})
             
           } catch (error) {
             console.error(error)
@@ -41,7 +41,7 @@ export default async function userIdHandler(
       }
       return res.status(400).json({ message: "q param is missing" })
     default:
-      res.setHeader('Allow', ['GET'])
+      res.setHeader('Allow', ['GET','POST','DELETE'])
       return res.status(405).end(`Method ${method} Not Allowed`)
   }
 }
