@@ -1,4 +1,5 @@
 import { PostsFilterType, PostType } from "@/types"
+import { toastSuccess } from "../toastMessage"
 import tetherAxios from "./axiosInstance"
 
 export const postsEndpoint = "api/posts"
@@ -26,14 +27,14 @@ export const getPosts = async (filter: PostsFilterType, userId: string, cursor?:
  return response.data;
 }
 
-export const createPost = async (postData: Partial<PostType>) => {
+export const createPost = async (authorId: string, content: string, image?: string ) => {
 
-   const { data } = await tetherAxios.post(postsEndpoint, {
-         content: postData.content,
-         authorId: postData.authorId,
-         image: postData.image
+   const { data, status } = await tetherAxios.post(postsEndpoint, {
+      content,
+      authorId,
+      image
    })
-
+   status < 300 && toastSuccess(data.message)
 }
 
 export const updatePost = async () => {

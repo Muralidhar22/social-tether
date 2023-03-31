@@ -17,6 +17,7 @@ import { getCommentsCount, commentsPostEndpoint } from "@/lib/api/commentsApi";
 import { MdOutlineModeComment } from "react-icons/md";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa"
+import { addLikeOptions, decrementLikeCountOptions, incrementLikeCountOptions, removeLikeOptions } from "@/lib/helperFunctions/likesMutationOptions";
 
 type PostContainerPropsType = {
     data: PostType;
@@ -34,15 +35,12 @@ const Post =  (props: PostContainerPropsType) => {
     const isPostPage = router.pathname.startsWith("/post")
     
     const toggleLike = async () => {
-
         if(hasUserLiked && hasUserLiked.value) {
-            await removeLike(hasUserLiked.id)
-            mutateLikesCount()
-            mutateHasUserLiked()
+            await mutateHasUserLiked(removeLike(hasUserLiked.id), removeLikeOptions())
+            likesCount && mutateLikesCount(likesCount - 1)
         } else {
-            await addLike(postData.id, sessionUserId)
-            mutateLikesCount()
-            mutateHasUserLiked()
+            await mutateHasUserLiked(addLike(postData.id, sessionUserId), addLikeOptions())
+            likesCount && mutateLikesCount(likesCount + 1)
             
         }
     }

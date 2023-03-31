@@ -27,12 +27,11 @@ export const addLike = async (postId: string, userId: string) => {
         userId
     })
     
-    return response.data
+    return response.data.addedItem
 }
 
 export const removeLike = async (likeId: string) => {
-    const { data: response } = await tetherAxios.delete(likesEndpoint, {
+ await tetherAxios.delete(likesEndpoint, {
         params: { likeId }
     })
-    return response.data
 }

@@ -12,10 +12,12 @@ import { authenticatedRoute } from '@/utils/redirection';
 import { UserType } from '@/types';
 import { toast, Toaster } from "react-hot-toast";
 import { toastError } from "@/lib/toastMessage";
+import { SessionUserContextType, useSessionUser } from "@/context/SessionUser";
 
-export const getServerSideProps: GetServerSideProps<{sessionUser: UserType}>  = authenticatedRoute
+export const getServerSideProps = authenticatedRoute
 
-const Post = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Post = () => {
+    const { sessionUserId } = useSessionUser() as SessionUserContextType
     const [postText, setPostText] = useState<string>()
     const [image, setImage] = useState<File>()
     const [selectedImage, setSelectedImage] = useState<string>()
@@ -38,12 +40,12 @@ const Post = ({ sessionUser }: InferGetServerSidePropsType<typeof getServerSideP
         }
         if(!image && !postText) {
             toastError("Post content can't be empty")
-        } else {
-            createPost({ 
-                authorId: sessionUser.id,
-                content: postText,
-                image: imageCloudinaryUrl 
-            })
+        } else if (postText || image) {
+            createPost( 
+                sessionUserId,
+                postText ?? "",
+                imageCloudinaryUrl ?? "" 
+            )
         }
     }
     

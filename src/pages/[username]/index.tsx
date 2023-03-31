@@ -35,7 +35,6 @@ const ProfilePage =  () => {
       (sessionUserData &&          
         <Profile
           userData={sessionUserData}
-          userMutate={mutateSessionUser}
           isSessionUserProfile={isSessionUserProfile}
           sessionUserId={sessionUserData?.id}  
         />
@@ -45,7 +44,6 @@ const ProfilePage =  () => {
         visitedUserData &&        
         <Profile
           userData={visitedUserData}
-          userMutate={visitedUserMutate}
           isSessionUserProfile={isSessionUserProfile}
           sessionUserId={sessionUserId}
         />

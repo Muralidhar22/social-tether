@@ -1,9 +1,8 @@
-import type { NextApiResponse } from 'next'
-import { FollowApiRequest } from '@/types/api'
+import type { NextApiResponse, NextApiRequest } from 'next'
 import prisma from "@/lib/client";
 
 export default async function userHandler(
-  req: FollowApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { query, method, body } = req
@@ -13,14 +12,14 @@ export default async function userHandler(
       try{
         const isFollowingData = await prisma?.userFollow.findFirst({
           where: {
-             followerId: query.followerId,
-             followingId: query.followingId
+             followerId: query.followerId as string,
+             followingId: query.followingId as string
           }
         })
         const isFollowerData = await prisma?.userFollow.findFirst({
           where: {
-             followerId: query.followingId,
-             followingId: query.followerId
+             followerId: query.followingId as string,
+             followingId: query.followerId as string
           }
         })
   
@@ -31,8 +30,7 @@ export default async function userHandler(
       } finally {
        await prisma?.$disconnect()    
       }
-    case 'PUT':
-      if(query.q === "add") {
+    case 'POST':
         try{
           const addData = await prisma?.userFollow.create({
             data: {
@@ -40,30 +38,29 @@ export default async function userHandler(
               followingId: body.followingId
             }
           })
-        return  res.status(200).json({ message: "Follow updated successfully!", data: { id: addData?.id ?? null }})
+        return  res.status(200).json({ message: "Follow updated successfully!", data: { addedItem: addData?.id }})
         } catch (error) {
           console.error(error)
           return res.status(500).json({message: "Something went wrong!", error})
         } finally {
           await prisma?.$disconnect()    
         }
-      } else if (query.q === "remove") {
+      case 'DELETE':
         try{
           const removeData = await prisma?.userFollow.delete({
             where: {
-              id: body.userFollowId
+              id: query.userFollowId as string
             }
           }) 
-          return res.status(200).json({ message: "Follow updated successfully!", data: { id: removeData?.id } })
+          return res.status(200).json({ message: "Follow updated successfully!", data: { removedItem: removeData?.id } })
         } catch (error) {
           console.error(error)
           return res.status(500).json({message: "Something went wrong!", error})
         } finally {
           await prisma?.$disconnect()    
         }
-      }
     default:
-      res.setHeader('Allow', ['GET', 'PUT'])
+      res.setHeader('Allow', ['GET', 'POST', 'DELETE'])
       return res.status(405).end(`Method ${method} Not Allowed`)
   }
 }

@@ -19,7 +19,7 @@ export default async function userIdHandler(
                     }
                   })
                     
-                 return res.status(201).json({ message: "Item created successfully!",data: { createdItem: likeData.id }})
+                 return res.status(201).json({ message: "Item created successfully!",data: { addedItem: likeData.id }})
                 } catch (error) {
                     console.error(error)
                     return res.status(500).json({message: "Something went wrong!", error})

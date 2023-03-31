@@ -1,13 +1,9 @@
-import useSWR from "swr"
+import { memo } from "react";
 
-import InfiniteScrollComponent from "../InfiniteScroll";
-import { PostsFilterType, PostType, UserType } from "@/types";
-
-
-import Image from "next/image";
-import UserImage from "../UserImage";
-import { userEmailEndpoint as userCacheKey } from "@/lib/api/userApi";
 import Post from "./Post";
+import InfiniteScrollComponent from "../InfiniteScroll";
+import { PostsFilterType, PostType } from "@/types";
+
 
 type PostsPropsType = {
     filter: PostsFilterType
@@ -42,4 +38,4 @@ const PostsContainer = ({ filter,userId }: PostsPropsType) => {
 
 }
 
-export default PostsContainer;
+export default memo(PostsContainer);

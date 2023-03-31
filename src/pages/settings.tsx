@@ -14,14 +14,14 @@ const SettingsPage = () => {
     
     const onSubmitHandler = (e: React.FormEvent) => {
         e.preventDefault();
-      };
+    };
     
-      const onChangeHandler = (
+    const onChangeHandler = (
         e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
         isToggle?: boolean
-      ) => {
+    ) => {
         
-      };
+    };
     
     return(
         <>

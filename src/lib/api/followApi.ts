@@ -1,8 +1,8 @@
 import { UserFollowType } from "@/types";
 import tetherAxios from "./axiosInstance";
 
-export const followCountEndpoint = "/api/follow/count";
-export const followUserEndpoint = "/api/follow/user"
+export const followCountEndpoint = "api/follow/count";
+export const followUserEndpoint = "api/follow/user"
 
 export const getUserFollowCount = async (userId: string | undefined) => {
     const { data: followCount } = await tetherAxios.get(followCountEndpoint, {
@@ -19,22 +19,18 @@ export const getSessionUserFollowInfo = async (followerId: string | undefined, f
     return followResponse.data;
 }
 
-export const addFollow = async (followerId: string | undefined, followingId: string | undefined, previousData: UserFollowType): Promise<UserFollowType | undefined> => {
-    if(followerId && followingId) {
-        const { data: addResponse } = await tetherAxios.put(followUserEndpoint, {
+export const addFollow = async (followerId: string, followingId: string, previousData: UserFollowType) => {
+        const { data: addResponse } = await tetherAxios.post(followUserEndpoint, {
            followerId,
            followingId
-        }, { params: { q: "add" } })
+        })
         
-        return { id: addResponse.id, isFollowing: true, isFollowed: previousData.isFollowed };   
-    }
+        return addResponse.data.addedItem;   
 }
 
-export const removeFollow = async (userFollowId: string): Promise<UserFollowType | undefined> => {
-    if(userFollowId) {
-        const { data: removeResponse } = await tetherAxios.put(followUserEndpoint, {
-            userFollowId
-        }, { params: { q: "remove" } })
-        return removeResponse.id;
-    }
+export const removeFollow = async (userFollowId: string) => {
+        const { data: removeResponse } = await tetherAxios.delete(followUserEndpoint, {
+         params:{ userFollowId }
+        })
+        return removeResponse.data.removedItem;
 } 

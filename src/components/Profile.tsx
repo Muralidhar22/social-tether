@@ -18,14 +18,12 @@ import PostsContainer from "./posts/PostsContainer";
 
 type ProfilePropsType = {
     userData: UserType;
-    userMutate: any;
     isSessionUserProfile: boolean;
     sessionUserId: string;
 }
 
 const Profile = ({
     userData,
-    userMutate,
     isSessionUserProfile,
     sessionUserId
 }: ProfilePropsType) => {
@@ -34,7 +32,7 @@ const { data:followData, mutate: followMutate } = useSWR(followCacheKey,() => ge
 const { data:userFollowCount, mutate: mutateUserFollowCount } = useSWR(followCountCacheKey, () => getUserFollowCount(userData.id))
 const { data: userPostsInfo, isLoading: userPostsInfoLoading } = useSWR(postCountCacheKey,() => getPostsCount(userData.username))
 
-
+console.log({followData})
 // useEffect(() => {
     
 // },[])
