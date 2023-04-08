@@ -8,10 +8,9 @@ import Link from "next/link";
 
 type CommentSectionProps = {
     postId: string;
-    mutateCommentsCount: () => any
 }
 
-const CommentSection = ({ postId, mutateCommentsCount }: CommentSectionProps) => {
+const CommentSection = ({ postId }: CommentSectionProps) => {
     const { sessionUserId } = useSessionUser() as SessionUserContextType
     const { data: commentsList, mutate: mutateCommentsList } = useSWR(`${commentsPostEndpoint}/${postId}`,() => getPostComments(postId))
     const [ commentText, setCommentText ] = useState<string>()
@@ -19,7 +18,6 @@ const CommentSection = ({ postId, mutateCommentsCount }: CommentSectionProps) =>
     const onClickComment = async () => {
         if(commentText) {
             await addComment(postId, sessionUserId, commentText)
-            mutateCommentsCount()
             mutateCommentsList()
             setCommentText("")
         }
@@ -30,8 +28,10 @@ const CommentSection = ({ postId, mutateCommentsCount }: CommentSectionProps) =>
                     <hr />
                 <div className="relative">
                     <textarea value={commentText} onChange={(e) => setCommentText(e.target.value)} name="" className="w-full" placeholder="type your comment" id="" cols={30} rows={10}></textarea>
-                    <button onClick={onClickComment} className="absolute bottom-5 right-5">comment</button>
+                    <button onClick={onClickComment} className="absolute bottom-5 right-5 dark:bg-black">comment</button>
                 </div>
+                <hr />
+                {commentsList?.length}&nbsp;comments
                 <hr />
                 <div>
                     {commentsList?.map(comment => (

@@ -8,11 +8,11 @@ import UserImage from "@/components/UserImage"
 import { PostType, UserType } from "@/types"
 import { useSessionUser, SessionUserContextType } from "@/context/SessionUser";
 
-import { getLikesCount, getHasUserLikedPost, likesPostEndpoint, addLike, removeLike, likesEndpoint } from "@/lib/api/likesApi";
+import { getLikes, likesPostEndpoint, addLike, removeLike } from "@/lib/api/likesApi";
 import { getHasUserBookmarked, bookmarkEndpoint, removeBookmark, addBookmark } from "@/lib/api/bookmarkApi";
 
 import CommentSection from "./CommentSection";
-import { getCommentsCount, commentsPostEndpoint } from "@/lib/api/commentsApi";
+
 
 import { MdOutlineModeComment } from "react-icons/md";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -29,18 +29,16 @@ const Post =  (props: PostContainerPropsType) => {
     const postData = props.data
     const { sessionUserId } = useSessionUser() as SessionUserContextType
     const {data: hasPostBookmarked, mutate: mutateHasPostBookmarked } = useSWR(`${bookmarkEndpoint}?q=post&postId=${postData.id}&userId=${sessionUserId}`,() => getHasUserBookmarked(postData.id, sessionUserId))
-    const { data: likesCount,mutate: mutateLikesCount} = useSWR(`${likesPostEndpoint}/${postData.id}?q=count`,() => getLikesCount(postData.id))
-    const { data: hasUserLiked ,mutate: mutateHasUserLiked } = useSWR(`${likesPostEndpoint}/${postData.id}?q=user`,() => getHasUserLikedPost(postData.id,sessionUserId))
-    const { data: commentsCount, mutate: mutateCommentsCount } = useSWR(`${commentsPostEndpoint}/${postData.id}?q=count`,() => getCommentsCount(postData.id))
+    const { data: likesData,mutate: mutateLikesData} = useSWR(`${likesPostEndpoint}/${postData.id}`,() => getLikes(postData.id, sessionUserId))
     const isPostPage = router.pathname.startsWith("/post")
     
+    console.log({likesData})
+    
     const toggleLike = async () => {
-        if(hasUserLiked && hasUserLiked.value) {
-            await mutateHasUserLiked(removeLike(hasUserLiked.id), removeLikeOptions())
-            likesCount && mutateLikesCount(likesCount - 1)
+        if(likesData?.hasUserLiked && likesData.hasUserLiked.value) {
+            await mutateLikesData(removeLike(likesData.hasUserLiked.id), removeLikeOptions())
         } else {
-            await mutateHasUserLiked(addLike(postData.id, sessionUserId), addLikeOptions())
-            likesCount && mutateLikesCount(likesCount + 1)
+            await mutateLikesData(addLike(postData.id, sessionUserId), addLikeOptions())
             
         }
     }
@@ -86,16 +84,15 @@ const Post =  (props: PostContainerPropsType) => {
         <div className="flex justify-evenly items-center">
             <span className="flex gap-1 items-center">
                 <span onClick={toggleLike}>
-                    {!hasUserLiked?.value && <FaRegHeart className="cursor-pointer"/>}
-                    {hasUserLiked?.value && <FaHeart color="red" className="cursor-pointer" />}
+                    {!likesData?.hasUserLiked?.value && <FaRegHeart className="cursor-pointer"/>}
+                    {likesData?.hasUserLiked?.value && <FaHeart color="red" className="cursor-pointer" />}
                 </span> 
-                {likesCount}
+                {likesData?.count}
             </span>
             <span className="flex items-center gap-1">
                 <Link href={`/post/${postData.id}`} >
                     <MdOutlineModeComment />
                 </Link> 
-                <span>{commentsCount}</span>
             </span>
             <span className="cursor-pointer" onClick={toggleBookmark}>
                 {!hasPostBookmarked?.value && <FaRegBookmark />}
@@ -107,7 +104,7 @@ const Post =  (props: PostContainerPropsType) => {
     {/* comments section */}
     {
         props.enableCommentSection &&
-            <CommentSection postId={postData.id} mutateCommentsCount={mutateCommentsCount} />
+            <CommentSection postId={postData.id} />
     }
 </>
 

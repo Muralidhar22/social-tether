@@ -2,34 +2,24 @@
 
 export const addLikeOptions = () => {
     return {
-        optimisticData: () => ({id: "",value: true }),
+        optimisticData: (currentData) => {
+            console.log(currentData)
+            return {hasUserLiked: {id: "",value: true }, count: currentData?.count + 1 }
+        },
         rollbackOnError: true,
-        populateCache: (likeId: string) => ({ id: likeId, value: true }),
+        populateCache: (likedId, currentData) => {
+        return{hasUserLiked: {id: likedId,value: true }, count: currentData && currentData.count + 1 }},
         revalidate: false,
     }
 }
 
 export const removeLikeOptions = () => {
     return {
-        optimisticData: () => ({id: "", value: false }),
+        optimisticData: (currentData) => {
+            console.log({hasUserLiked: { id: "", value: false }, count: currentData?.count - 1})
+            return {hasUserLiked: { id: "", value: false }, count: currentData &&  currentData?.count - 1}},
         rollbackOnError: true,
+        populateCache: (_updatedData, currentData) => ({hasUserLiked: { id: "", value: false }, count: currentData && currentData?.count - 1}),
         revalidate: false,
-    }
-}
-
-export const decrementLikeCountOptions = () => {
-    return {
-        optimisticData: (currentCount: number) => {console.log({currentCount}, currentCount - 1); 
-        return currentCount - 1},
-        rollbackOnError: true,
-        revalidate: false
-    }
-}
-
-export const incrementLikeCountOptions = () => {
-    return {
-        optimisticData: (currentCount: number) => currentCount + 1,
-        rollbackOnError: true,
-        revalidate: false
     }
 }

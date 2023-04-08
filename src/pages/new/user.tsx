@@ -27,9 +27,13 @@ const NewUser = () => {
             Create a username to fill
             <form onSubmit={onSubmitHandler}>
                 <input 
+                    required
                     value={username ?? ""}
                     type="text"
                     onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    type="password"
                 />   
             </form>
             <button onClick={() => signOut()}>Sign out</button>
