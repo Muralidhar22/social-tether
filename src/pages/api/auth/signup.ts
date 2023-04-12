@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { UserApiRequest } from '@/types/api'
 import { hash } from 'bcryptjs'
 import prisma from "@/lib/client";
 
@@ -10,7 +9,7 @@ type Data = {
 }
 
 export default async function commentsHandler(
-  req: UserApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
   const { query, method } = req
