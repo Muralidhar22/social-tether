@@ -15,6 +15,9 @@ jobs:
 
     - name: Install Prisma CLI
       run: yarn add -D prisma
-
+    
+    - name: Prisma generate
+      run: yarn prisma generate
+    
     - name: Run Prisma migrate
       run: yarn prisma migrate deploy
