@@ -11,8 +11,9 @@ import UserImage from '@/components/UserImage';
 import NavMenu from '@/components/NavMenu';
 import { useSessionUser, SessionUserContextType } from "@/context/SessionUser";
 
-import { FaCompass, FaBookmark, FaUser, FaSearch } from "react-icons/fa";
+import { FaCompass, FaBookmark, FaUser } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
+import UserSearchBar from '@/components/UsersSearchBar';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const { sessionUserId, sessionCacheKey } = useSessionUser() as SessionUserContextType
@@ -22,10 +23,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="p-5">
         <nav className="flex justify-between items-center">
         <Logo />
-        <input type="search" className="dark:bg-black-500 border dark:border-zinc-500 border rounded-md focus:outline-none hidden lg:block" placeholder="search users"/>
-        <span>
-            <FaSearch className="lg:hidden" />
-        </span>
+            <UserSearchBar />
             <div className="hidden lg:flex gap-5 item-center">
             <Link  href={`${sessionUserData ? `/${sessionUserData.username}` : "#"}`}>
             <UserImage 
@@ -50,8 +48,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             Explore
             </span>
         </Link>
-        <Link href="/settings">
-        <IoSettingsSharp />
+        <Link href={`/${sessionUserData?.username}?edit=true`}>
+           <IoSettingsSharp />
         </Link>
                 <DarkModeToggle />
                 <Link href="/new/post">New post</Link>

@@ -10,7 +10,6 @@ type PostsPropsType = {
     userId: string
 }
 
-
 const PostsContainer = ({ filter,userId }: PostsPropsType) => {    
     let url = `api/posts?q=${filter}`
     let content;
@@ -31,9 +30,9 @@ const PostsContainer = ({ filter,userId }: PostsPropsType) => {
             break;
     }
     return (
-        <div>
+        <>
             {content}
-        </div>
+        </>
     )
 
 }

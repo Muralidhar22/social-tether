@@ -9,16 +9,16 @@ export const getHasUserBookmarked = async (postId: string, userId: string): Prom
     return response.data
 }
 
-export const addBookmark = async (postId: string, userId: string): Promise<{addedItem: string}> => {
+export const addBookmark = async (postId: string, userId: string) => {
     const { data: response  } = await tetherAxios.post(bookmarkEndpoint,{
         postId, userId
     })
-    return response.data
+    return response.data.addedItem
 }
 
-export const removeBookmark = async (bookmarkId: string): Promise<{removedItem: string}> => {
+export const removeBookmark = async (bookmarkId: string) => {
     const { data: response  } = await tetherAxios.delete(bookmarkEndpoint,{
         params: { bookmarkId }
     })
-    return response.data
+    return response.data.removedItem
 }

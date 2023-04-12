@@ -15,6 +15,7 @@ export default async function userIdHandler(
     image: true,
     name: true,
     username: true,
+    bio: true,
   }
   
   switch (method) {

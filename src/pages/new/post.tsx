@@ -21,7 +21,7 @@ const Post = () => {
     const [postText, setPostText] = useState<string>()
     const [image, setImage] = useState<File>()
     const [selectedImage, setSelectedImage] = useState<string>()
-    const onSubmitHandler = async (e: React.FormEvent) => {
+    const onSubmitHandler = async (e: React.FormEvent) => { 
         e.preventDefault()
         // router
 
@@ -30,6 +30,7 @@ const Post = () => {
             const formData = new FormData()
             formData.append("file", image)
             formData.append("upload_preset","hjgl49mu")
+
             try {
                 const { data, status } = await axios.post(`${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_API}`,formData)
                 imageCloudinaryUrl = data.secure_url
@@ -51,7 +52,7 @@ const Post = () => {
     
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files && e.target.files[0]
-        e.target.files && setImage(e.target.files[0])
+        file && setImage(file)
         if(file) {
             const reader = new FileReader();
             reader.onloadend = () => {

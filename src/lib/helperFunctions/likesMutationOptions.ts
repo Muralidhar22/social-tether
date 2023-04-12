@@ -1,25 +1,25 @@
 // likes mutation
 
+import { GetLikesApiResponse } from "@/types/api"
+
 export const addLikeOptions = () => {
     return {
-        optimisticData: (currentData) => {
-            console.log(currentData)
-            return {hasUserLiked: {id: "",value: true }, count: currentData?.count + 1 }
+        optimisticData: (currentData: GetLikesApiResponse | undefined) => {
+            return {hasUserLiked: {id: "",value: true }, count: currentData ? currentData?.count + 1 : 0 }
         },
         rollbackOnError: true,
-        populateCache: (likedId, currentData) => {
-        return{hasUserLiked: {id: likedId,value: true }, count: currentData && currentData.count + 1 }},
+        populateCache: (likedId: string, currentData:  GetLikesApiResponse | undefined) => {
+        return{hasUserLiked: {id: likedId,value: true }, count: currentData ? currentData.count + 1 : 0 }},
         revalidate: false,
     }
 }
 
 export const removeLikeOptions = () => {
     return {
-        optimisticData: (currentData) => {
-            console.log({hasUserLiked: { id: "", value: false }, count: currentData?.count - 1})
-            return {hasUserLiked: { id: "", value: false }, count: currentData &&  currentData?.count - 1}},
+        optimisticData: (currentData: GetLikesApiResponse | undefined) => {
+            return {hasUserLiked: { id: "", value: false }, count: currentData ? currentData?.count - 1 : 0}},
         rollbackOnError: true,
-        populateCache: (_updatedData, currentData) => ({hasUserLiked: { id: "", value: false }, count: currentData && currentData?.count - 1}),
+        populateCache: (_removedId: string, currentData: GetLikesApiResponse | undefined) => ({hasUserLiked: { id: "", value: false }, count: currentData ? currentData?.count - 1 : 0}),
         revalidate: false,
     }
 }

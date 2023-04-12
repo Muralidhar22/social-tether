@@ -42,7 +42,10 @@ export default async function postHandler(
       if(query.q === "all") {
         try {
           const data = await prisma?.post.findMany({
-            ...queryOptions
+            ...queryOptions,
+            orderBy: {
+              updatedAt: "desc"
+            }
           })
         const lastPostInResults = data && data[queryOptions.take - 1] 
         const nextCursor = lastPostInResults?.id 
@@ -72,6 +75,9 @@ export default async function postHandler(
         try {
             const data = await prisma?.post.findMany({
               ...queryOptions,
+              orderBy: {
+                updatedAt: "desc"
+              }
             })
             const lastPostInResults = data && data[queryOptions.take - 1] 
             const nextCursor = lastPostInResults?.id 
@@ -93,7 +99,10 @@ export default async function postHandler(
         try{
           
           const userPosts = await prisma?.post.findMany({
-            ...queryOptions
+            ...queryOptions,
+            orderBy: {
+              updatedAt: "desc"
+            }
           })
           const lastPostInResults = userPosts && userPosts[queryOptions.take - 1] 
           const nextCursor = lastPostInResults?.id 

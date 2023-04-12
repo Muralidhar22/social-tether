@@ -49,3 +49,7 @@ input[type="file"] {
 .toast-text {
   @apply !text-black;
 }
+
+.modal-open {
+  overflow: hidden;
+}

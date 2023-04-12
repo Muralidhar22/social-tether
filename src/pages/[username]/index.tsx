@@ -9,6 +9,7 @@ import { useSessionUser, SessionUserContextType } from '@/context/SessionUser';
 import Profile from '@/components/Profile';
 
 import { UserType } from '@/types';
+import ProfileEditPage from '@/components/ProfileEdit';
 
 export const getServerSideProps = authenticatedRoute
 
@@ -20,7 +21,12 @@ const ProfilePage =  () => {
   const { data: visitedUserData, mutate: visitedUserMutate, isLoading, error } = useSWR(visitedUserCacheKey,() => getUserByUsername(usernameFromRoute as string));
   const {data: sessionUserData, mutate: mutateSessionUser } = useSWR(sessionCacheKey, () => getUserById(sessionUserId))
   const isSessionUserProfile = sessionUserData?.username === usernameFromRoute
-
+  const { query } = useRouter()
+  
+  if(query.edit === "true") {
+    return <ProfileEditPage />
+  }
+  
   return(
     <>
     {/* {
@@ -36,7 +42,8 @@ const ProfilePage =  () => {
         <Profile
           userData={sessionUserData}
           isSessionUserProfile={isSessionUserProfile}
-          sessionUserId={sessionUserData?.id}  
+          sessionUserId={sessionUserData?.id}
+          mutateSessionUser={mutateSessionUser}  
         />
       )
       :
@@ -46,6 +53,7 @@ const ProfilePage =  () => {
           userData={visitedUserData}
           isSessionUserProfile={isSessionUserProfile}
           sessionUserId={sessionUserId}
+          mutateSessionUser={mutateSessionUser}
         />
       )
     }

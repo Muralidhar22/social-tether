@@ -1,4 +1,3 @@
-import { UserApiRequest } from '@/types/api'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import prisma from "@/lib/client";
@@ -9,20 +8,25 @@ const selectOptions = {
   image: true,
   name: true,
   username: true,
+  bio: true,
 }
 
 export default async function userHandler(
-  req: UserApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { query, method, body } = req
-  const username = query.username
+  const searchString = query.search as string
+  
   switch (method) {
     case 'GET':
       try{
-        const user = await prisma?.user.findUnique({
-          where: { username },
+        const user = await prisma?.user.findMany({
+          where: { username: {
+            startsWith: searchString
+          } },
           select: selectOptions,
+          take: 10
         })
         if(!user) {
           return res.status(404).json({ message: "User not found" })
@@ -35,13 +39,14 @@ export default async function userHandler(
         await prisma?.$disconnect()    
       }
     case 'PUT':
-      if(body.username) {
         try{
           const updatedUser = await prisma?.user.update({
-            where: { email: body.email },
+            where: { id: body.id },
             data: {
-                username: body.username
-            }
+                image: body.image,
+                bio: body.bio
+            },
+            select: selectOptions,
           })
           res.status(200).json(updatedUser)
         } catch (error) {
@@ -56,8 +61,7 @@ export default async function userHandler(
         } finally {
           await prisma?.$disconnect()    
         }
-      }
-      res.status(400).json({ message: "Username missing in payload" })
+      res.status(400).json({ message: "Updated user details missing in payload" })
       break;
     default:
       res.setHeader('Allow', ['GET', 'PUT'])

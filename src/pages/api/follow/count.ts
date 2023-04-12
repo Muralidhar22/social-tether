@@ -11,19 +11,19 @@ export default async function getFollowInfoHandler(
   switch (method) {
     case 'GET':
       try{
-        const followingData = await prisma?.userFollow.findMany({
+        const followingData = await prisma?.userFollow.count({
           where: {
               followerId: id
           }
         })
-        const followerData = await prisma?.userFollow.findMany({
+        const followerData = await prisma?.userFollow.count({
           where: {
               followingId: id
           }
         }) 
         return res.status(200).json({ message: "Follow info returned", data: {
-          followingCount: followingData?.length,
-          followerCount: followerData?.length
+          followingCount: followingData,
+          followerCount: followerData
         } })
       } catch (error) {
         console.error(error)

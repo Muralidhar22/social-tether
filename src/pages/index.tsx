@@ -12,7 +12,6 @@ import Posts from '@/components/posts/PostsContainer';
 import UserImage from '@/components/UserImage';
 import { getRandomUsers, getUserById, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
 import { SessionUserContextType, useSessionUser } from '@/context/SessionUser';
-import useSWRState from '@/hooks/useSWRState';
 
 export const getServerSideProps = authenticatedRoute
 
@@ -27,6 +26,8 @@ const Home = () => {
     const { query } = router
     if(query.feed === "explore") {
       setPostsFilter("all")
+    } else {
+      setPostsFilter("following")
     } 
   },[router])
 
@@ -39,8 +40,10 @@ const Home = () => {
         <meta property="og:title" content="Tether" key="title" />
       </Head>
 
-        <div className="flex gap-5 justify-center items-start">
+        <div className="mx-auto flex gap-5 md:w-3/5 items-start">
+          <div>
           {sessionUserId && <Posts filter={postsFilter} userId={sessionUserId} />}
+          </div>
 
             <div className="border-2 rounded-md border-zinc-500 hidden lg:block p-2 w-80">
               <h2>Users to follow</h2>   

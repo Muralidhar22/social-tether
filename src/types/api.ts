@@ -23,19 +23,6 @@ export interface PostsApiRequest extends NextApiRequest {
     }
 }
 
-export interface UserApiRequest extends NextApiRequest {
-    query: {
-      id: string;
-      email: string;
-      username: string;
-    };
-    body: {
-      username: string;
-      email: string;
-      password: string;
-    }
-}
-
 export interface FollowApiRequest extends NextApiRequest {
   query: {
     q: "add" | "remove";
@@ -48,10 +35,11 @@ export interface FollowApiRequest extends NextApiRequest {
     userFollowId: string;
   }
 }
-export interface CommentsApiRequest extends NextApiRequest {
-  
-}
 
-export interface LikesApiRequest extends NextApiRequest {
-  
+export type GetLikesApiResponse = {
+  count: number;
+  hasUserLiked: {
+    id: string;
+    value: boolean;
+  }
 }

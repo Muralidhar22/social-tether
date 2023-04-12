@@ -1,13 +1,12 @@
-import { UserApiRequest } from '@/types/api'
-import type { NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from "@/lib/client";
 
 export default async function userHandler(
-  req: UserApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { query, method } = req
-  const { username } = query
+  const username = query.username as string
 
   switch (method) {
     case 'GET':

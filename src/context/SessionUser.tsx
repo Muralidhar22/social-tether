@@ -23,7 +23,7 @@ export const SessionUserProvider = ({children, sid }: { children: React.ReactNod
 
 export const useSessionUser = () => {
     const context = useContext(SessionUserContext);
-    if (context === undefined) {
+    if (!context) {
       throw new Error('useSessionUser must be used within a SessionUserProvider');
     }
     return context;

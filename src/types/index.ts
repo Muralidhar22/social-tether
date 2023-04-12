@@ -1,4 +1,4 @@
-export type PostsFilterType = "all" | "following" | "user"
+export type PostsFilterType = "all" | "following" | "user" | "bookmark"
 
 export type UserFollowType = {
     isFollowed: boolean;

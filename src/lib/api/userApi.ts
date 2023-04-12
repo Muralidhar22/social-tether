@@ -1,3 +1,4 @@
+import axios from "axios"
 import tetherAxios from "./axiosInstance"
 
 import { UserType } from "@/types"
@@ -12,6 +13,14 @@ export const randomUsersEndpoint = "/api/user/random"
 export const userEmailEndpoint = "/api/user/email"
 export const userIdEndpoint = "/api/user/id"
 export const userUsernameEndpoint = "/api/user/username"
+
+export const getUserBySearchString = async (searchString: string): Promise<UserType[]> => {
+    const { data:response } = await tetherAxios.get(`${usersEndpoint}`,{
+        params: { search: searchString }
+    })
+    
+    return response.data
+}
 
 export const getUserByEmail = async (email: string): Promise<ResponseType<UserType> | undefined> => {
         if(email) {
@@ -50,7 +59,8 @@ export const getRandomUsers = async (username: string | undefined): Promise<Resp
     }
 } 
 
-export const updateUser = async ( ) => {
-    
+export const updateUserProfile = async (updatedUserDetails: UserType) => {
+  const { data } = await tetherAxios.put(usersEndpoint, { ...updatedUserDetails })
+  return data
 }
 

@@ -37,7 +37,8 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
             revalidateOnFocus: false,
         }   
         )
-        const paginatedData = data && data?.map((val) => val[keyOnData ?? ""]) //leaving the cursor and picking up each page data
+    
+        const paginatedData = data && data.length > 0 && data?.map((val) => val[keyOnData ?? ""]) //leaving the cursor and picking up each page data
         const mappedData = paginatedData && paginatedData ? [].concat(...paginatedData) : [];
         const loaderRef = useRef<HTMLDivElement>(null)
         const [loadNewPosts, setLoadNewPosts] = useState<boolean>()
@@ -80,7 +81,13 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
         )
     }
     
-    if(mappedData.length === 0) {
+    if(isLoading) {
+        return(
+            <div className="text-3xl font-bold">Loading..</div>
+        )
+    }
+    
+    if(mappedData.length === 0 && (!isLoading || !isValidating)) {
         return(
             <>
                 <div>{emptyDataMessage}</div>

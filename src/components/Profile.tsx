@@ -1,6 +1,6 @@
-import useSWR from "swr";
+import useSWR, { KeyedMutator } from "swr";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 import { UserType } from "@/types";
 import { 
@@ -15,27 +15,26 @@ import { addFollowOptions, removeFollowOptions } from '@/lib/helperFunctions/fol
 import { signOut } from "next-auth/react";
 import UserImage from "./UserImage";
 import PostsContainer from "./posts/PostsContainer";
+import ModalProfile from "./ProfileEdit";
+import Image from "next/image";
 
 type ProfilePropsType = {
     userData: UserType;
     isSessionUserProfile: boolean;
     sessionUserId: string;
+    mutateSessionUser: KeyedMutator<UserType | undefined>
 }
 
 const Profile = ({
     userData,
     isSessionUserProfile,
-    sessionUserId
+    sessionUserId,
 }: ProfilePropsType) => {
 const postCountCacheKey = `${postsCountEndpoint}/${userData.username}`
 const { data:followData, mutate: followMutate } = useSWR(followCacheKey,() => getSessionUserFollowInfo(sessionUserId, userData.id))
 const { data:userFollowCount, mutate: mutateUserFollowCount } = useSWR(followCountCacheKey, () => getUserFollowCount(userData.id))
 const { data: userPostsInfo, isLoading: userPostsInfoLoading } = useSWR(postCountCacheKey,() => getPostsCount(userData.username))
-
-console.log({followData})
-// useEffect(() => {
-    
-// },[])
+const { asPath } = useRouter()
 
 const addFollowClickHandler = async () => {
 if(followData){
@@ -60,31 +59,41 @@ const removeFollowClickHandler = async () => {
 
     return (
         <>
-        <h1>Profile Page</h1>
-          <div className="grid">
-            <div className="cover-img">
-              cover image
-            </div>
-            {/* User image */}
-            <div className="">
-              <span className="">
-                user image
-              </span>
-              <UserImage
-                imageSrc={userData.image}
-                width={100}
-                height={100}
+          <div className="md:mx-auto lg:w-1/2 md:w-3/4 mx-1">
+              <Image 
+                src="/assets/profile-default-bg.png"
+                width={720}
+                height={250}
+                alt="cover image"
+                priority
+                className="block w-full"
               />
-            </div> 
-            {/* Follow button logic */}
-            <h2 className="text-center">{userData.username}</h2>
-              {!isSessionUserProfile && followData &&
+            {/* User image */}
+            <div className="flex justify-between items-center">
+              
+              <div className="-translate-y-1/2">
+                <UserImage
+                  imageSrc={userData.image}
+                  width={100}
+                  height={100}
+                  displayBorder={true}
+                />
+              </div>
+               {/* Follow button logic */}
+               {!isSessionUserProfile && followData &&
               (
                 followData?.isFollowing
                 ? <button onClick={removeFollowClickHandler} className="font-semibold px-2 py-4 border rounded border-black dark:border-white">Following</button>
                 : <button className="cursor-pointer px-2 py-4 border rounded bg-black text-white dark:bg-white dark:text-black font-semibold" onClick={addFollowClickHandler}>Follow</button>
               )
-              } 
+              }
+              {isSessionUserProfile && <Link shallow href={`${asPath}?edit=true`}>Edit profile</Link>} 
+            </div> 
+            <div className="flex items-center gap-2">
+                  <h2 className="text-center">@{userData.username}</h2>
+                  {followData?.isFollowed && <span className="text-sm font-semibold">Follows you</span>}
+            </div>
+              {userData.bio ? <div className="text-center my-2">{userData.bio}</div> : <div className="text-center my-2">I'm a mysterious person</div>}
               {/* User following, followers, posts count */}
             <div className="flex justify-center gap-5">
                 <span className="flex gap-2">Followers&nbsp;{userFollowCount?.followerCount}</span>
@@ -97,17 +106,18 @@ const removeFollowClickHandler = async () => {
             isSessionUserProfile
             &&
             <>
-              <Link href={`/${userData.username}?edit=true`} shallow>Edit profile</Link>
               <div className="flex justify-center">
                 <button className="mt-5 px-10 py-1" onClick={() => signOut()}>Sign out</button>
               </div>
             </>
           }
           <h2>Posts</h2>
-          <PostsContainer 
-            filter="user"
-            userId={userData.id}
-          />
+          <div className="sm:w-2/5 mx-auto">
+            <PostsContainer 
+              filter="user"
+              userId={userData.id}
+            />
+          </div>
         </>
     )
 }

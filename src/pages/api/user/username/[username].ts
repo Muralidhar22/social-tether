@@ -1,4 +1,3 @@
-import { UserApiRequest } from '@/types/api'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import prisma from "@/lib/client";
@@ -9,14 +8,15 @@ const selectOptions = {
   image: true,
   name: true,
   username: true,
+  bio: true,
 }
 
 export default async function userHandler(
-  req: UserApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { query, method, body } = req
-  const username = query.username
+  const username = query.username as string
   switch (method) {
     case 'GET':
       try {

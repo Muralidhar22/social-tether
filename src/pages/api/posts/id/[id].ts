@@ -26,7 +26,6 @@ export default async function postByIdHandler(
       updatedAt: true
     }
   };
-  console.log({id})
 
   switch (method) {
     case 'GET':
