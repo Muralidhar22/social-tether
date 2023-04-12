@@ -57,9 +57,9 @@ const Home = () => {
                     <UserImage 
                         imageSrc={user.image}
                     />
-                      <Link href={`/${user.username}`}>{user.username}</Link>
+                    <Link href={`/${user.username}`}>{user.username}</Link>
                   </span>
-                ) )
+                ))
               }
             </div>
         </div>

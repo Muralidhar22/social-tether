@@ -93,7 +93,7 @@ const removeFollowClickHandler = async () => {
                   <h2 className="text-center">@{userData.username}</h2>
                   {followData?.isFollowed && <span className="text-sm font-semibold">Follows you</span>}
             </div>
-              {userData.bio ? <div className="text-center my-2">{userData.bio}</div> : <div className="text-center my-2">I'm a mysterious person</div>}
+              {userData.bio ? <div className="text-center my-2">{userData.bio}</div> : <div className="text-center my-2">I&apos;m a mysterious person</div>}
               {/* User following, followers, posts count */}
             <div className="flex justify-center gap-5">
                 <span className="flex gap-2">Followers&nbsp;{userFollowCount?.followerCount}</span>
