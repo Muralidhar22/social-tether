@@ -12,6 +12,7 @@ import Posts from '@/components/posts/PostsContainer';
 import UserImage from '@/components/UserImage';
 import { getRandomUsers, getUserById, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
 import { SessionUserContextType, useSessionUser } from '@/context/SessionUser';
+import NavMenu from '@/components/NavMenu';
 
 export const getServerSideProps = authenticatedRoute
 
@@ -19,7 +20,7 @@ const Home = () => {
   const [postsFilter, setPostsFilter] = useState<PostsFilterType>("following")
   const { sessionCacheKey, sessionUserId } = useSessionUser() as SessionUserContextType
   const { data: sessionUserData } = useSWR(sessionCacheKey,() => getUserById(sessionUserId))
-  const { isLoading, data: randomUsers, error } = useSWR(() => `${cacheKey}?username=` + sessionUserData?.username,() => getRandomUsers(sessionUserData?.username))
+  const { isLoading, data: randomUsers, error } = useSWR(() => `${cacheKey}?username=` + sessionUserData?.username,() => getRandomUsers(sessionUserId))
   const router = useRouter()
   
   useEffect(() => {
@@ -45,15 +46,15 @@ const Home = () => {
           {sessionUserId && <Posts filter={postsFilter} userId={sessionUserId} />}
           </div>
 
-            <div className="border-2 rounded-md border-zinc-500 hidden lg:block p-2 w-80">
-              <h2>Users to follow</h2>   
+            <div className="border-2 rounded-md border-zinc-500 hidden lg:block pt-2 w-80">
+              <h2 className="ml-2">Users to follow</h2>   
               {
                 isLoading 
                 ?
                 <span>loading...</span>
                 :
                 randomUsers?.data && randomUsers?.data.map((user) => (
-                  <span key={user.id} className="bg-red-500 text-white font-bold m-2 flex gap-3">
+                  <span key={user.id} className="font-bold hover:bg-zinc-500 p-2 flex gap-3">
                     <UserImage 
                         imageSrc={user.image}
                     />
@@ -63,6 +64,7 @@ const Home = () => {
               }
             </div>
         </div>
+
     </>
   )
 }

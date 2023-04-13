@@ -74,20 +74,20 @@ const ProfileEditPage = () => {
           </div>
             <label htmlFor="username">
               Username:
-            <input id="username" className="my-5 block w-full cursor-not-allowed" disabled value={formData?.username} type="text" />
+            <input id="username" className="my-5 p-2 rounded-md block w-full cursor-not-allowed" disabled value={formData?.username} type="text" />
             </label>
             
             <label htmlFor="email">
               Email:
-            <input id="email" className="block my-5 w-full cursor-not-allowed" disabled value={formData?.email} type="text" />
+            <input id="email" className="block my-5 p-2 rounded-md w-full cursor-not-allowed" disabled value={formData?.email} type="text" />
             </label>
             
             <label htmlFor="bio">Bio:</label>
-            <textarea name="bio" id="bio" rows={5} className="block w-full" value={formData?.bio ??""} onChange={(e) => setFormData(prev => (prev ? {...prev, bio: e.target.value} : prev))}/>
+            <textarea name="bio" id="bio" rows={5} className="block p-2 rounded-md w-full" value={formData?.bio ??""} onChange={(e) => setFormData(prev => (prev ? {...prev, bio: e.target.value} : prev))}/>
             {profileInfoChanged && 
-            <div className="inset-0 sticky">
+            <div className="inset-0 sticky flex gap-5 items-center mt-5">
               You may have unsaved changes
-              <button onClick={saveNewProfilePicture}>save</button>
+              <button onClick={saveNewProfilePicture} className="p-2 dark:bg-white dark:text-black bg-black rounded-md">save</button>
             </div>}
         </div>
     )

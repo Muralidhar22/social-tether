@@ -6,18 +6,23 @@ export default async function userHandler(
   res: NextApiResponse
 ) {
   const { query, method } = req
-  const username = query.username as string
-
+  const userId = query.userId as string
   switch (method) {
     case 'GET':
         
-        if(username) {
+        if(userId) {
           try{
+              const usersList = await prisma?.userFollow.findMany({
+                  where: {
+                    followerId: userId
+                  }
+                })
+              
               const data = await prisma?.user.findMany(
                   {
                     where: {
-                      NOT: {
-                        username
+                      id: {
+                        notIn: [userId,...usersList.map((el) => el.followingId)]
                       }
                     },
                     take: 4,
@@ -38,7 +43,7 @@ export default async function userHandler(
               await prisma?.$disconnect()    
             }
           }
-          return res.status(400).json({message: "'username' param required"})
+          return res.status(400).json({message: "userId param required"})
     default:
       res.setHeader('Allow', ['GET'])
       res.status(405).end(`Method ${method} Not Allowed`)

@@ -1,20 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+	<h2 align="center">Tether</h2>
+	<h5 align="center">
+		 A Social Media platform.
+	</h5>
+</div>
+ 
+## Salient Features
+
+- Infinite scrolling
+- Add Likes, comments, posts
+- Following users
+- Debounced search bar for users
+- Profile page
 
 ## Getting Started
 
-First, run the development server:
+#### Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+git clone https://github.com/Muralidhar22/cdm-FE-assignment.git
 ```
+
+## Usage
+
+#### Run in production mode
+
+```bash
+yarn start
+```
+
+> Make sure to install dependencies with `yarn` command before deploy.
+
+#### Run in development mode
+
+```bash
+yarn dev
+```
+
+> Make sure to install dependencies with `yarn` command before development.\
+
+#### Browse the app
+
+- **Frontend - [http://localhost:3000](http://localhost:3000)**
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+
+- **Backend- [http://localhost:3000/api](http://localhost:3000/api)**
 
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 

@@ -22,13 +22,13 @@ const UserSearchBar = () => {
         <div className="relative">
         <input type="search" className={`dark:bg-black-500 border dark:border-zinc-500 border rounded-md focus:outline-none p-1`} placeholder="search users" value={searchInputValue} onChange={onSearchInputChange}/>
 
-        {data && data.length > 0 && <div className="absolute translate-y-2 w-full dark:text-black bg-white p-2 flex flex-col">
+        {data && data.length > 0 && <div className="absolute translate-y-2 w-full dark:text-black bg-white p-2 flex flex-col border-2">
             <ul>
                {
-                data.map((el) => (
-                    <li key={el.id}> <Link href={`/${el.username}`}><span className="flex items-center gap-1 dark:text-black">
+                data.map((el, idx) => (
+                    <li key={el.id} className={`${idx !== 0 && "border-t"}`}> <Link href={`/${el.username}`}><span className="flex items-center gap-1 dark:text-black">
                         <UserImage imageSrc={el.image} />
-                        {el.username}</span></Link> </li>
+                        {el.username}</span></Link></li>
                     ))
                 }
                 </ul>

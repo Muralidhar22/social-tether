@@ -48,16 +48,14 @@ export const updateUsername = async (newUsername: string) => {
     return data
 }
 
-export const getRandomUsers = async (username: string | undefined): Promise<ResponseType<UserType[]> | undefined> => {
-    if(username) {
+export const getRandomUsers = async (userId: string): Promise<ResponseType<UserType[]> | undefined> => {
         const { data } = await tetherAxios.get(randomUsersEndpoint, {
             params: {
-                username
+                userId
             }
         })
         return data        
-    }
-} 
+}
 
 export const updateUserProfile = async (updatedUserDetails: UserType) => {
   const { data } = await tetherAxios.put(usersEndpoint, { ...updatedUserDetails })

@@ -43,12 +43,12 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
         const loaderRef = useRef<HTMLDivElement>(null)
         const [loadNewPosts, setLoadNewPosts] = useState<boolean>()
         
-        const handleClick = () => {
-            const isUrlNull = data && getKeyWithUrl(url,limit)(size-1,data[size-1])
-                if(isUrlNull) {
-                    setSize(size + 1)
-                } 
-        }
+        // const handleClick = () => {
+        //     const isUrlNull = data && getKeyWithUrl(url,limit)(size-1,data[size-1])
+        //         if(isUrlNull) {
+        //             setSize(size + 1)
+        //         } 
+        // }
         
         useEffect(() => {
             if(!isLoading && !isValidating && loadNewPosts) {
@@ -57,7 +57,7 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
                     setSize(size + 1)
                 } 
             }
-        },[isLoading, isValidating, loadNewPosts])
+        },[isLoading, isValidating, loadNewPosts, size, data])
     
     useEffect(() => {
         if (!loaderRef.current) return

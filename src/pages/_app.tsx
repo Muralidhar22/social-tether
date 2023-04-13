@@ -44,7 +44,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           `
          }}
       />
-     <div className={`${inter.variable} font-sans min-h-screen`}>
+     <div className={`${inter.variable} dark:text-white font-sans min-h-screen`}>
       <Toaster />
           <SessionUserProvider sid={sessionUserId ?? ""} >
             {

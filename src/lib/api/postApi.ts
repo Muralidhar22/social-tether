@@ -34,7 +34,7 @@ export const createPost = async (authorId: string, content: string, image?: stri
       authorId,
       image
    })
-   status < 300 && toastSuccess(data.message)
+   status < 300 && toastSuccess('Post created successfully')
 }
 
 export const updatePost = async () => {

@@ -1,40 +1,36 @@
 import Link from "next/link";
-// import { AdvancedImage } from "@cloudinary/react";
-// import {  } from "@cloudinary/url-gen";
-import { FaCompass, FaBookmark, FaUser, FaSearch } from "react-icons/fa";
-import { IoSettings } from "react-icons/io5";
-type SideNavPropsType = {
-    username: string
-}
+import useSWR from "swr";
 
-const NavMenu = ({ username }: SideNavPropsType) => {
+import { useSessionUser } from "@/context/SessionUser";
+import { getUserById } from "@/lib/api/userApi";
+import UserImage from "./UserImage";
+import DarkModeToggle from "./DarkModeToggle";
+
+import { FaCompass, FaBookmark } from "react-icons/fa";
+import { IoSettingsSharp } from "react-icons/io5";
+
+const NavMenu = ({className}: { className: string }) => {
+    const { sessionUserId, sessionCacheKey } = useSessionUser() 
+    const {data: sessionUserData, mutate: mutateSessionUser } = useSWR(sessionCacheKey, () => getUserById(sessionUserId))
+
     return(
-        <>
-        <div className="flex gap-2">
-           <Link href={`/${username}`}>
-            <FaUser className="text-zinc-400"/>
-         <IoSettings />
-            &nbsp;
-            <span className="lg:hidden">
-               Profile
-            </span>  
+        <div className={className}>
+                <Link  href={`${sessionUserData ? `/${sessionUserData.username}` : "#"}`}>
+            <UserImage 
+               imageSrc={sessionUserData?.image}
+            />
             </Link>
-           <Link href={`/bookmarks`}>
-            <FaBookmark />
-            &nbsp;
-            <span className="lg:hidden">
-                Bookmarks
-            </span>
+            <Link href={`/bookmarks`}>
+                <FaBookmark />
             </Link>
            <Link href={`/?feed=explore`}>
-            <FaCompass />
-            &nbsp;
-            <span className="lg:hidden">
-            Explore
-            </span>
-        </Link>
+                <FaCompass />
+            </Link>
+            <Link href={`/${sessionUserData?.username}?edit=true`}>
+            <IoSettingsSharp />
+            </Link>
+            <DarkModeToggle />
         </div>
-        </>
     )
 }
 

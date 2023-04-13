@@ -1,4 +1,5 @@
 import tetherAxios from "./axiosInstance"
+import { toastSuccess } from "../toastMessage"
 
 export const likesEndpoint = "api/likes"
 export const likesPostEndpoint = "api/likes/post"
@@ -19,7 +20,6 @@ export const addLike = async (postId: string, userId: string) => {
         postId,
         userId
     })
-    
     return response.data.addedItem
 }
 

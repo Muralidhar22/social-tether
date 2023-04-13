@@ -1,7 +1,5 @@
 import { memo } from "react";
 import Image from "next/image";
-import Link from "next/link";
-
 
 import { FaRegUserCircle } from "react-icons/fa";
 
@@ -16,7 +14,7 @@ const UserImage = memo(function UserImage({ imageSrc, width = 32, height = 32, d
     
     return(
         <>
-              <div className={`rounded-full overflow-hidden ${displayBorder && "border-2"}`} style={{ width: `${width}px`, height: `${height}px` }}>         
+              <div className={`rounded-full overflow-hidden bg-black ${displayBorder && "border-2"}`} style={{ width: `${width}px`, height: `${height}px` }}>         
                     {
                         imageSrc ?
                         <Image
@@ -26,7 +24,7 @@ const UserImage = memo(function UserImage({ imageSrc, width = 32, height = 32, d
                             width={width}
                             height={height}
                         /> :
-                        <FaRegUserCircle />
+                        <FaRegUserCircle className="text-white w-full h-full" />
                     }
             </div>
         </>

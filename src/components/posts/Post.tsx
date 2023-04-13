@@ -13,6 +13,7 @@ import CommentSection from "./CommentSection";
 import { addLikeOptions, removeLikeOptions } from "@/lib/helperFunctions/likesMutationOptions";
 import { addBookmarkOptions, removeBookmarkOptions } from "@/lib/helperFunctions/bookmarkMutationOptions";
 import toggleBodyScroll from "@/utils/toggleBodyScroll";
+import { getUserById } from "@/lib/api/userApi";
 
 import { MdOutlineModeComment } from "react-icons/md";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -26,12 +27,15 @@ type PostContainerPropsType = {
 const Post =  (props: PostContainerPropsType) => {
     const router = useRouter()
     const postData = props.data
-    const { sessionUserId } = useSessionUser() as SessionUserContextType
+    const { sessionUserId, sessionCacheKey } = useSessionUser() as SessionUserContextType
+    const {data: sessionUserData, mutate: mutateSessionUser } = useSWR(sessionCacheKey, () => getUserById(sessionUserId))
     const {data: hasPostBookmarked, mutate: mutateHasPostBookmarked } = useSWR(`${bookmarkEndpoint}?q=post&postId=${postData.id}&userId=${sessionUserId}`,() => getHasUserBookmarked(postData.id, sessionUserId))
     const { data: likesData,mutate: mutateLikesData} = useSWR(`${likesPostEndpoint}/${postData.id}`,() => getLikes(postData.id, sessionUserId))
     const isPostPage = router.pathname.startsWith("/post")
     const [openImageModal, setOpenImageModal] = useState<boolean>(false)
 
+    console.log(router.query)
+    
     const onClickToggleImgModal = (e: React.MouseEvent) => {
         toggleBodyScroll()
         setOpenImageModal(prev => !prev)
@@ -75,8 +79,11 @@ const Post =  (props: PostContainerPropsType) => {
         </div>
 
         {/* post content */}
-        <div className="max-w-96 w-full border-2 border-zinc-500 p-2">
+        <div className="max-w-96 w-full border-2 rounded-md border-zinc-500 p-2">
+        <div className="flex justify-between items-center">
         <Link className="block font-bold" href={`/${postData?.author.username}`}>{postData?.author?.username}</Link>
+        {router.query?.username === sessionUserData?.username && <span className="rotate-90 cursor-pointer">&hellip;</span>}
+        </div>
             {postData?.image
                 &&
                 <div className="cursor-pointer p-2 overflow-hidden max-h-96" onClick={onClickToggleImgModal}>

@@ -10,23 +10,9 @@ body {
   @apply dark:bg-black;
 }
 
-h1,
-h2,
-h3,
-h4,
-div,
-p,
-span {
-  @apply dark:text-white;
-}
-
 input,
 textarea {
   @apply dark:text-black;
-}
-
-input[type="file"] {
-  @apply dark:text-white;
 }
 
 .logo {

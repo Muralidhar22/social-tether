@@ -1,16 +1,10 @@
-import { AdvancedImage } from "@cloudinary/react"
-import { GetServerSideProps } from 'next';
-import { InferGetServerSidePropsType } from 'next'
 import { useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 
 import { createPost } from "@/lib/api/postApi";
-import useSWR from "swr"
 import getLayout from "@/layout";
 import { authenticatedRoute } from '@/utils/redirection';
-import { UserType } from '@/types';
-import { toast, Toaster } from "react-hot-toast";
 import { toastError } from "@/lib/toastMessage";
 import { SessionUserContextType, useSessionUser } from "@/context/SessionUser";
 
@@ -64,9 +58,7 @@ const Post = () => {
     
     return (
         <>
-        <Toaster />
             <div>
-                
             <form onSubmit={onSubmitHandler} className="flex flex-col gap-3">
                 <div className="w-19 h-40 border border-dashed p-5">
                 <label htmlFor="" id="post-picture">
