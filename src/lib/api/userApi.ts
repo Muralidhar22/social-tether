@@ -1,7 +1,7 @@
-import axios from "axios"
 import tetherAxios from "./axiosInstance"
 
 import { UserType } from "@/types"
+import { toastSuccess } from "../toastMessage"
 
 type ResponseType<T> = {
     message: string,
@@ -43,8 +43,9 @@ export const getUserByUsername = async (username: string): Promise<UserType | un
     }
 }
 
-export const updateUsername = async (newUsername: string) => {
-    const { data } = await tetherAxios.put(usersEndpoint,{ username: newUsername })
+export const updateUsername = async (newUsername: string, userId: string) => {
+    const { data, status } = await tetherAxios.put(`${userIdEndpoint}/${userId}`,{ username: newUsername })
+    status < 300 && toastSuccess("Updated profile details successfully")
     return data
 }
 
@@ -58,7 +59,8 @@ export const getRandomUsers = async (userId: string): Promise<ResponseType<UserT
 }
 
 export const updateUserProfile = async (updatedUserDetails: UserType) => {
-  const { data } = await tetherAxios.put(usersEndpoint, { ...updatedUserDetails })
+  const { data, status } = await tetherAxios.put(usersEndpoint, { ...updatedUserDetails })
+  status < 300 && toastSuccess("Updated profile details successfully")
   return data
 }
 

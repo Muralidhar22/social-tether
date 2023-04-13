@@ -32,7 +32,6 @@ const Register = () => {
                 password: values.password,
                 email: values.email
             })
-            console.log({data, status})
         } catch(error) {
             
         }

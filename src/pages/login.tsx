@@ -83,7 +83,9 @@ const Login = () => {
                         </button>
                     </div>
                     <div className="input-button">
-                        <button type="button" onClick={() => signIn('google',{ callbackUrl: "http://localhost:3000/" })} className={styles.button_custom}>
+                        <button type="button" onClick={() => signIn('google',{
+                            callbackUrl: process.env.NEXT_PUBLIC_BASE_URL
+                        })} className={styles.button_custom}>
                             Sign In with Google 
                             <span>
                                 <Image 
@@ -96,7 +98,7 @@ const Login = () => {
                         </button>
                     </div>
                     <div className="input-button"> 
-                            <button type="button" onClick={() => signIn('github',{ callbackUrl: "http://localhost:3000/" })} className={styles.button_custom}>
+                            <button type="button" onClick={() => signIn('github',{ callbackUrl: process.env.NEXT_PUBLIC_BASE_URL })} className={styles.button_custom}>
                                 Sign In with Github
                                 <span>
                                 <Image 

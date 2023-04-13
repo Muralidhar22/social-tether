@@ -5,7 +5,6 @@ export const addFollowOptions = () => {
         optimisticData: (currentData: UserFollowType | undefined) => ({...currentData,isFollowed: currentData?.isFollowed ?? false,isFollowing: true }),
         rollbackOnError: true,
         populateCache: (newFollowId: string, currentData: UserFollowType | undefined) => {
-            console.log({newFollowId})
             return { id: newFollowId, isFollowing: true, isFollowed: currentData?.isFollowed ?? false}},
         revalidate: false,
     }

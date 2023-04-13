@@ -16,6 +16,7 @@ const ProfileEditPage = () => {
   const [newImage, setNewImage] = useState<File | null>()
   const inputFileRef = useRef<HTMLInputElement>(null)
   const [profileInfoChanged, setProfileInfoChanged] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   
   useEffect(() => {
     if(JSON.stringify(sessionUserData) 
@@ -25,7 +26,7 @@ const ProfileEditPage = () => {
       } else {
         setProfileInfoChanged(false)
       }
-  },[formData])
+  },[formData, sessionUserData])
   
   const onProfileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files && e.target.files[0];
@@ -46,12 +47,13 @@ const ProfileEditPage = () => {
     
     const saveNewProfilePicture = async () => {
       let url = formData?.image;
+      setIsSubmitting(true)
       if(newImage) {
         url = await uploadImgCloudinary(newImage)
-        // console.log(await updateUserProfile(url, sessionUserId))
-        // setNewImage(null)
       }
       formData && await updateUserProfile({...formData, image: url})
+      setIsSubmitting(false)
+      mutateSessionUser()
     }
     
     return (
@@ -83,11 +85,11 @@ const ProfileEditPage = () => {
             </label>
             
             <label htmlFor="bio">Bio:</label>
-            <textarea name="bio" id="bio" rows={5} className="block p-2 rounded-md w-full" value={formData?.bio ??""} onChange={(e) => setFormData(prev => (prev ? {...prev, bio: e.target.value} : prev))}/>
+            <textarea name="bio" id="bio" rows={5} className="block border-2 p-2 rounded-md w-full" value={formData?.bio ??""} onChange={(e) => setFormData(prev => (prev ? {...prev, bio: e.target.value} : prev))}/>
             {profileInfoChanged && 
             <div className="inset-0 sticky flex gap-5 items-center mt-5">
               You may have unsaved changes
-              <button onClick={saveNewProfilePicture} className="p-2 dark:bg-white dark:text-black bg-black rounded-md">save</button>
+              <button disabled={isSubmitting} onClick={saveNewProfilePicture} className={`p-2 border-2 rounded-md ${isSubmitting && "opacity-50"}`}>{isSubmitting ? "updating details.." : "save"}</button>
             </div>}
         </div>
     )

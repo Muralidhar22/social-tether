@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import axios from "axios";
 
@@ -7,40 +7,40 @@ import getLayout from "@/layout";
 import { authenticatedRoute } from '@/utils/redirection';
 import { toastError } from "@/lib/toastMessage";
 import { SessionUserContextType, useSessionUser } from "@/context/SessionUser";
+import uploadImgCloudinary from "@/utils/uploadImgCloudinary";
 
 export const getServerSideProps = authenticatedRoute
 
 const Post = () => {
     const { sessionUserId } = useSessionUser() as SessionUserContextType
     const [postText, setPostText] = useState<string>()
-    const [image, setImage] = useState<File>()
-    const [selectedImage, setSelectedImage] = useState<string>()
+    const [image, setImage] = useState<File | null>()
+    const [selectedImage, setSelectedImage] = useState<string | null>()
+    const inputFileRef = useRef<HTMLInputElement>(null)
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+    
     const onSubmitHandler = async (e: React.FormEvent) => { 
         e.preventDefault()
         // router
-
+        setIsSubmitting(true)
         let imageCloudinaryUrl;
-        if(image) {
-            const formData = new FormData()
-            formData.append("file", image)
-            formData.append("upload_preset","hjgl49mu")
-
-            try {
-                const { data, status } = await axios.post(`${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_API}`,formData)
-                imageCloudinaryUrl = data.secure_url
-                
-            } catch (error) {
-                console.error(error)
-            }
-        }
         if(!image && !postText) {
             toastError("Post content can't be empty")
+            setIsSubmitting(false)
+        }
+        if(image) {
+           imageCloudinaryUrl = await uploadImgCloudinary(image)
         } else if (postText || image) {
-            createPost( 
+            await createPost( 
                 sessionUserId,
                 postText ?? "",
                 imageCloudinaryUrl ?? "" 
             )
+            setPostText("")
+            setImage(null)
+            setSelectedImage(null)
+            if(inputFileRef.current) inputFileRef.current.value = ""
+            setIsSubmitting(false)
         }
     }
     
@@ -60,20 +60,26 @@ const Post = () => {
         <>
             <div>
             <form onSubmit={onSubmitHandler} className="flex flex-col gap-3">
-                <div className="w-19 h-40 border border-dashed p-5">
+                <div className="w-19 border-4 border-dashed p-5">
                 <label htmlFor="" id="post-picture">
-                    Upload
-                    <input type="file" accept="image/png, image/jpeg" onChange={(e) => onChangeHandler(e)} id="post-picture" />
+                    select image&nbsp;
+                    <input type="file" ref={inputFileRef} accept="image/png, image/jpeg" onChange={(e) => onChangeHandler(e)} id="post-picture" />
                 </label>
-                    <Image 
-                        src={selectedImage ?? ""}
-                        alt={`uploaded image ${image?.name}`}
-                        width={120}
-                        height={120}
-                    />
+                <div className="mt-2 flex justify-center">       
+                    {selectedImage && 
+                        <Image 
+                            src={selectedImage ?? ""}
+                            alt={`uploaded image ${image?.name}`}
+                            width={120}
+                            height={120}
+                            className="object-contain block"
+                        />
+                    }
                 </div>
-                <textarea value={postText} onChange={(e) => setPostText(e.target.value)} name="" id="" cols={30} rows={10}></textarea>
-                <button type="submit" className="">submit</button>
+                </div>
+                <textarea value={postText} onChange={(e) => setPostText(e.target.value)} name="" id="" cols={30} rows={10} className="border-4 rounded-md"></textarea>
+                <button type="submit" disabled={isSubmitting} className={`border-2 rounded-md mx-auto p-2 ${isSubmitting && "opacity-50"}`}>
+                    {isSubmitting ? "creating post..." : "submit"}</button>
             </form>
             </div>
             

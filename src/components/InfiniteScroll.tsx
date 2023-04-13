@@ -37,8 +37,8 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
             revalidateOnFocus: false,
         }   
         )
-    
-        const paginatedData = data && data.length > 0 && data?.map((val) => val[keyOnData ?? ""]) //leaving the cursor and picking up each page data
+
+        const paginatedData = data && data.length > 0 && data?.map((val) => val && val[keyOnData ?? ""]) //leaving the cursor and picking up each page data
         const mappedData = paginatedData && paginatedData ? [].concat(...paginatedData) : [];
         const loaderRef = useRef<HTMLDivElement>(null)
         const [loadNewPosts, setLoadNewPosts] = useState<boolean>()
@@ -92,6 +92,12 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
             <>
                 <div>{emptyDataMessage}</div>
             </>
+        )
+    }
+    
+    if(!data) {
+        return(
+            <div className="font-bold text-xl">Something went wrong!</div>
         )
     }
     

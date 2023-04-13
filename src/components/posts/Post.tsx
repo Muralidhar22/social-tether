@@ -33,8 +33,6 @@ const Post =  (props: PostContainerPropsType) => {
     const { data: likesData,mutate: mutateLikesData} = useSWR(`${likesPostEndpoint}/${postData.id}`,() => getLikes(postData.id, sessionUserId))
     const isPostPage = router.pathname.startsWith("/post")
     const [openImageModal, setOpenImageModal] = useState<boolean>(false)
-
-    console.log(router.query)
     
     const onClickToggleImgModal = (e: React.MouseEvent) => {
         toggleBodyScroll()
@@ -79,7 +77,7 @@ const Post =  (props: PostContainerPropsType) => {
         </div>
 
         {/* post content */}
-        <div className="max-w-96 w-full border-2 rounded-md border-zinc-500 p-2">
+        <div className="w-full border-2 rounded-md border-zinc-500 p-2">
         <div className="flex justify-between items-center">
         <Link className="block font-bold" href={`/${postData?.author.username}`}>{postData?.author?.username}</Link>
         {router.query?.username === sessionUserData?.username && <span className="rotate-90 cursor-pointer">&hellip;</span>}

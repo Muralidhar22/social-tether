@@ -68,7 +68,7 @@ const removeFollowClickHandler = async () => {
                 priority
                 className="block w-full"
               />
-            <div className="px-2 pb-2 border-b-2 border-x-2 border-zinc-500 rounded-b-xl">
+            <div className="px-2 pb-2 border-2 -mt-1 border-zinc-500 rounded-b-xl">
               {/* User image */}
               <div className="flex justify-between items-center">
                 <div className="-translate-y-1/2">

@@ -5,7 +5,6 @@ export const addBookmarkOptions = () => {
         },
         rollbackOnError: true,
         populateCache: (bookmarkId: string) => {
-            console.log({bookmarkId})
         return {id: bookmarkId, value: true }},
         revalidate: false,
     }
