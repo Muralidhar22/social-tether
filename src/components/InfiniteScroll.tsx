@@ -3,8 +3,8 @@ import useSWRInfinite from 'swr/infinite';
 import tetherAxios from "@/lib/api/axiosInstance";
 
 
-type InfiniteScrollComponentProps<T> = {
-    ComponentToRender: React.FC<{ data: T, mutateData?: any, page?: number, index?: number }>
+type InfiniteScrollComponentProps = {
+    ComponentToRender: React.FC<{ data: any, mutateData?: any, page?: number, index?: number }>
     limit: number;
     url: string;
     keyOnData: "posts";
@@ -31,13 +31,9 @@ const fetcher = async (url: string) => {
     }
 } 
 
-const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender, emptyDataMessage }: InfiniteScrollComponentProps<T>) => {
+const InfiniteScrollComponent = ({ url, limit, keyOnData, ComponentToRender, emptyDataMessage }: InfiniteScrollComponentProps) => {
     const { data, error, isLoading, setSize, size, mutate, isValidating } = useSWRInfinite(
-        getKeyWithUrl(url, limit),fetcher, {
-            revalidateOnFocus: false,
-        }   
-        )
-
+        getKeyWithUrl(url, limit),fetcher)
         const paginatedData = data && data.length > 0 && data?.map((val) => val && val[keyOnData ?? ""]) //leaving the cursor and picking up each page data
         const mappedData = paginatedData && paginatedData ? [].concat(...paginatedData) : [];
         const loaderRef = useRef<HTMLDivElement>(null)
@@ -100,13 +96,13 @@ const InfiniteScrollComponent = <T,>({ url, limit, keyOnData, ComponentToRender,
             <div className="font-bold text-xl">Something went wrong!</div>
         )
     }
-    
+
     return (
 
         <div>
             {
                 mappedData.map((data: any, idx) => (
-                    <ComponentToRender key={data.id} data={data} />
+                   data && <ComponentToRender key={data?.id} data={data} />
                 ))
             }
 

@@ -14,8 +14,8 @@ const PostsContainer = ({ filter,userId }: PostsPropsType) => {
     let url = `api/posts?q=${filter}`
     let content;
     switch(filter) {
-        case "all": 
-            content = <InfiniteScrollComponent<PostType> emptyDataMessage="This is awkward" keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
+        case "all":
+            content = <InfiniteScrollComponent emptyDataMessage="This is awkward" keyOnData="posts" limit={2} url={url} ComponentToRender={Post} />
             break;
         case "following":
             url = `${url}&userId=${userId}`

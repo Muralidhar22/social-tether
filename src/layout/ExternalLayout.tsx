@@ -1,5 +1,4 @@
 import styles from "@/styles/ExternalLayout.module.css"
-import Image from "next/image"
 
 type Props = {
     children: React.ReactNode

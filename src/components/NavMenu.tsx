@@ -15,10 +15,10 @@ const NavMenu = ({className}: { className: string }) => {
 
     return(
         <div className={className}>
-                <Link  href={`${sessionUserData ? `/${sessionUserData.username}` : "#"}`}>
-            <UserImage 
-               imageSrc={sessionUserData?.image}
-            />
+            <Link  href={`${sessionUserData ? `/${sessionUserData.username}` : "#"}`} >
+                <UserImage 
+                imageSrc={sessionUserData?.image}
+                />
             </Link>
             <Link href={`/bookmarks`}>
                 <FaBookmark />
@@ -27,7 +27,7 @@ const NavMenu = ({className}: { className: string }) => {
                 <FaCompass />
             </Link>
             <Link href={`/${sessionUserData?.username}?edit=true`}>
-            <IoSettingsSharp />
+                <IoSettingsSharp />
             </Link>
             <DarkModeToggle />
         </div>

@@ -1,4 +1,6 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
+
 import ExternalLayout from "@/layout/ExternalLayout";
 import Link from "next/link";
 import styles from "@/styles/Form.module.css";
@@ -8,12 +10,14 @@ import { useFormik } from "formik";
 import { RegisterFormValues } from "@/types/formValues";
 import registerValidate from "@/utils/registerValidate";
 import tetherAxios from "@/lib/api/axiosInstance";
+import { toastError } from "@/lib/toastMessage";
 
 const Register = () => {
     const [show, setShow] = useState({
         password: false,
         confirmPassword: false
     })
+    const router = useRouter()
     const formik = useFormik({
         initialValues: {
             username: "",
@@ -32,8 +36,9 @@ const Register = () => {
                 password: values.password,
                 email: values.email
             })
+            status < 300 && process.env.NEXT_PUBLIC_BASE_URL && router.push(process.env.NEXT_PUBLIC_BASE_URL)
         } catch(error) {
-            
+            toastError("Something went wrong, try again later")
         }
     }
     
