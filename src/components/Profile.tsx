@@ -33,7 +33,7 @@ const Profile = ({
 const postCountCacheKey = `${postsCountEndpoint}/${userData.username}`
 const { data:followData, mutate: followMutate } = useSWR(followCacheKey,() => getSessionUserFollowInfo(sessionUserId, userData.id))
 const { data:userFollowCount, mutate: mutateUserFollowCount } = useSWR(followCountCacheKey, () => getUserFollowCount(userData.id))
-const { data: userPostsInfo, isLoading: userPostsInfoLoading } = useSWR(postCountCacheKey,() => getPostsCount(userData.username))
+const { data: userPostsInfo, isLoading: userPostsInfoLoading } = useSWR(postCountCacheKey,() => getPostsCount(userData.id))
 const { asPath } = useRouter()
 
 const addFollowClickHandler = async () => {
