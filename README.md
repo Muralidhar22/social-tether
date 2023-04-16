@@ -8,9 +8,10 @@
 ## Salient Features
 
 - Infinite scrolling
+- Debounced search bar for users
+- Optimistic UI updates
 - Add Likes, comments, posts
 - Following users
-- Debounced search bar for users
 - Profile page
 
 ## Getting Started
