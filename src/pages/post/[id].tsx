@@ -23,7 +23,7 @@ const PostPage = () => {
         <>
             {postData &&
             <>
-            {sessionUserId === postData.authorId && <button>Edit post</button>}
+            {/* {sessionUserId === postData.authorId && <button>Edit post</button>} */}
             <Post data={postData} enableCommentSection={true} />
 
             </>

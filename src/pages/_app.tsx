@@ -1,14 +1,13 @@
 import type { ReactElement, ReactNode } from 'react'
 import type { NextPage } from 'next'
-import { useEffect } from "react";
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Inter } from '@next/font/google'
 import Script from 'next/script'
 import { Toaster } from "react-hot-toast"
+import { SWRConfig } from 'swr'
 
 import { SessionUserProvider } from '@/context/SessionUser';
-import { authenticatedRoute } from '@/utils/redirection';
 
 const inter = Inter({ subsets: ['latin'], weight: ["400","500","600","700"],variable: "--font-inter"  })
 
@@ -44,6 +43,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           `
          }}
       />
+     <SWRConfig value={{ revalidateOnFocus: false }} >
+      
      <div className={`${inter.variable} dark:text-white font-sans min-h-screen`}>
       <Toaster />
           <SessionUserProvider sid={sessionUserId ?? ""} >
@@ -54,6 +55,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               }
           </SessionUserProvider>
       </div>
+    </SWRConfig>
     </>
   )
 }
