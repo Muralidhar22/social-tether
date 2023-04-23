@@ -1,16 +1,14 @@
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-
-
-import { getUserByEmail } from "@/lib/api/userApi";
+import prisma from "@/lib/client";
 
 export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     const session = await getServerSession(ctx.req, ctx.res, authOptions)
     let userInfoResponse;
 
     if(!session) {
-      return {
+      return { 
         redirect: {
           destination: "/login",
           permanent: false
@@ -19,18 +17,34 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     }
     
    if(session.user?.email) {
-    userInfoResponse = await getUserByEmail(session.user.email)
-    if(!userInfoResponse?.data?.username && ctx.resolvedUrl !== "/new/user") {
+     try {
+          userInfoResponse = await prisma?.user.findUnique({
+                where: { email: session.user.email },
+                select: {
+                   email: true,
+                    id: true,
+                    image: true,
+                    name: true,
+                    username: true,
+                },
+              })
+            } catch (error) {
+              console.error(error)
+            } finally {
+              await prisma?.$disconnect()    
+    }
+
+    if(!userInfoResponse?.username && ctx.resolvedUrl !== "/new/user") {
         return {
           redirect: {
             destination: "/new/user",
             permanent: false
           }
         }
-    } else if(userInfoResponse?.data?.username && ctx.resolvedUrl === "/new/user") {
+    } else if(userInfoResponse?.username && ctx.resolvedUrl === "/new/user") {
         return {
           redirect: {
-            destination: `/${userInfoResponse.data.username}`,
+            destination: `/${userInfoResponse.username}`,
             permanent: false
           }
         }
@@ -38,6 +52,7 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     }
     
     if(!userInfoResponse) {
+      console.log("Asdasdasd")
       return {
         redirect: {
           destination: "/500",
@@ -47,6 +62,6 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     }
 
     return {
-      props: { sessionUserId: userInfoResponse.data.id }
+      props: { sessionUserId: userInfoResponse.id }
     } 
 }
