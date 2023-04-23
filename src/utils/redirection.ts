@@ -52,7 +52,6 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     }
     
     if(!userInfoResponse) {
-      console.log("Asdasdasd")
       return {
         redirect: {
           destination: "/500",
