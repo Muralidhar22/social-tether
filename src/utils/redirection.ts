@@ -18,7 +18,7 @@ export async function authenticatedRoute(ctx: GetServerSidePropsContext) {
     
    if(session.user?.email) {
      try {
-          userInfoResponse = await prisma?.user.findUnique({
+          userInfoResponse = await  prisma?.user.findFirst({
                 where: { email: session.user.email },
                 select: {
                    email: true,

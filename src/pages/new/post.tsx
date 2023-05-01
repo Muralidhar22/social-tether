@@ -9,7 +9,7 @@ import { toastError } from "@/lib/toastMessage";
 import { SessionUserContextType, useSessionUser } from "@/context/SessionUser";
 import uploadImgCloudinary from "@/utils/uploadImgCloudinary";
 
-export const getServerSideProps = authenticatedRoute
+// export const getServerSideProps = authenticatedRoute
 
 const Post = () => {
     const { sessionUserId } = useSessionUser() as SessionUserContextType

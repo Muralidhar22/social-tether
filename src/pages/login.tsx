@@ -12,6 +12,8 @@ import loginValidate from "@/utils/loginValidate";
 
 const Login = () => {
     const [show, setShow] = useState(false)
+    const [loggingIn ,setLoggingIn] = useState<boolean>(false)
+    
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -22,6 +24,7 @@ const Login = () => {
     })
     
     async function onSubmit(values: LoginFormValues) {
+        setLoggingIn(true)
         signIn('credentials',{
             redirect: true,
             email: values.email,
@@ -78,7 +81,7 @@ const Login = () => {
                     {/* form password validation error message */}
                     { formik.errors.password && formik.touched.password && <span className="text-sm text-rose-500">{formik.errors.password}</span>}
                     <div className="input-button">
-                        <button type="submit" className={styles.button}>
+                        <button type="submit" disabled={loggingIn} className={`${styles.button} ${loggingIn && "opacity-50"}`}>
                             Login
                         </button>
                     </div>

@@ -12,7 +12,6 @@ import Posts from '@/components/posts/PostsContainer';
 import UserImage from '@/components/UserImage';
 import { getRandomUsers, getUserById, randomUsersEndpoint as cacheKey } from '@/lib/api/userApi';
 import { SessionUserContextType, useSessionUser } from '@/context/SessionUser';
-import NavMenu from '@/components/NavMenu';
 
 export const getServerSideProps = authenticatedRoute
 
